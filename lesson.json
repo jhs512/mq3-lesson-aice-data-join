@@ -1,0 +1,595 @@
+{
+  "schema_version": 1,
+  "id": "aice-data-join",
+  "revision": "v1.0.0",
+  "title": "여러 파일을 읽어 하나의 표로",
+  "description": "JSON과 CSV를 읽어 같은 키로 합치고, 두 달 자료를 위아래로 이어요. 합친 뒤에는 행 수와 빈칸을 꼭 확인해요. 필수 문제 7개와 선택 도전 2개예요.",
+  "sources": [
+    "https://aice.study/info/aice/asso",
+    "https://pandas.pydata.org/docs/reference/api/pandas.read_json.html",
+    "https://pandas.pydata.org/docs/reference/api/pandas.merge.html",
+    "https://pandas.pydata.org/docs/reference/api/pandas.concat.html"
+  ],
+  "sections": [],
+  "review_enabled": false,
+  "tasks": [
+    {
+      "id": "read-json",
+      "title": "JSON 파일을 표로 읽어요",
+      "goal": "JSON은 `{\"이름\": 값}` 묶음으로 자료를 적는 글자 파일이에요.\n고객 파일은 이 묶음을 `[ ]` 안에 늘어놓았어요. 묶음 하나가 한 행, 이름은 열 이름이 돼요.\n`pd.read_json`은 이런 JSON 파일을 읽어 표로 만들어요.\n\n자, 먼저 코드 실행을 누르세요. JSON 파일을 read_csv로 읽었어요.\n표의 크기와 열 이름을 보세요. 고객 정보가 여러 열로 나뉘었나요?\n`pd.read_csv`를 `pd.read_json`으로 바꾸고 다시 실행하세요.\n크기와 열 이름을 처음 결과와 비교해요.",
+      "language": "python",
+      "entry_file": "main.py",
+      "starter_code": "import pandas as pd\n\n# 직접 만든 고객 자료예요. 실제 고객 자료가 아니에요.\n# 고객 파일은 JSON인데 CSV를 읽는 함수로 읽었어요.\ncustomers = pd.read_csv('data/customers.json')\n# 표의 크기를 확인해요. 앞 숫자가 행 수, 뒤 숫자가 열 수예요.\nprint(customers.shape)\n# 표 전체를 봐요. 맨 위 줄이 열 이름이에요.\nprint(customers)\n",
+      "solution": "import pandas as pd\n\n# 직접 만든 고객 자료예요. 실제 고객 자료가 아니에요.\n# JSON 파일은 read_json으로 읽어요. 묶음 하나가 한 행이 돼요.\ncustomers = pd.read_json('data/customers.json')\n# 표의 크기를 확인해요. 앞 숫자가 행 수, 뒤 숫자가 열 수예요.\nprint(customers.shape)\n# 표 전체를 봐요. 맨 위 줄이 열 이름이에요.\nprint(customers)\n",
+      "files": {
+        "data/customers.json": "[\n  {\"customer_id\": \"C01\", \"region\": \"서울\", \"grade\": \"gold\"},\n  {\"customer_id\": \"C02\", \"region\": \"부산\", \"grade\": \"silver\"},\n  {\"customer_id\": \"C03\", \"region\": \"서울\", \"grade\": \"silver\"},\n  {\"customer_id\": \"C05\", \"region\": \"대구\", \"grade\": \"gold\"}\n]\n"
+      },
+      "tests": [
+        {
+          "input": "",
+          "expected": "(4, 3)\n  customer_id region   grade\n0         C01     서울    gold\n1         C02     부산  silver\n2         C03     서울  silver\n3         C05     대구    gold"
+        }
+      ],
+      "web_checks": [],
+      "git_checks": null,
+      "required": true,
+      "hints": [
+        "`pd.read_json('data/customers.json')`로 바꿔요. 경로는 그대로 둬요."
+      ],
+      "narration": [
+        {
+          "action": "set_code",
+          "code": "import pandas as pd\n\n# 직접 만든 고객 자료예요. 실제 고객 자료가 아니에요.\n# 고객 파일은 JSON인데 CSV를 읽는 함수로 읽었어요.\ncustomers = pd.read_csv('data/customers.json')\n# 표의 크기를 확인해요. 앞 숫자가 행 수, 뒤 숫자가 열 수예요.\nprint(customers.shape)\n# 표 전체를 봐요. 맨 위 줄이 열 이름이에요.\nprint(customers)\n",
+          "say": "준비 코드를 먼저 실행해 볼게요."
+        },
+        {
+          "action": "run",
+          "expected_failure": false
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "실행 결과를 비교해요.           nan                NaN"
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "text": "조심하세요. JSON을 read_csv로 읽으면 오류 없이 엉뚱한 표가 나오기도 해요."
+        },
+        {
+          "action": "patch_code",
+          "before": "# 고객 파일은 JSON인데 CSV를 읽는 함수로 읽었어요.\ncustomers = pd.read_csv('data/customers.json')",
+          "after": "# JSON 파일은 read_json으로 읽어요. 묶음 하나가 한 행이 돼요.\ncustomers = pd.read_json('data/customers.json')",
+          "say": "작은 부분을 바꿔 원리를 확인해요."
+        },
+        {
+          "action": "run"
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "실행 결과를 비교해요. r / 3         C05     대구    gold"
+        },
+        {
+          "action": "submit"
+        }
+      ],
+      "checker": "import ast\nimport builtins\nimport contextlib\nimport io\nimport math\nimport os\nfrom pathlib import Path\nimport shutil\nimport sys\nimport tempfile\nimport traceback\nimport warnings\n\nos.environ['MPLBACKEND'] = 'Agg'\n# Grading output is for the verdict only; font and library warnings would bury the reason.\nwarnings.filterwarnings('ignore')\nbuiltins.display = lambda *args, **kwargs: None\nreference = \"import pandas as pd\\n\\n# 직접 만든 고객 자료예요. 실제 고객 자료가 아니에요.\\n# JSON 파일은 read_json으로 읽어요. 묶음 하나가 한 행이 돼요.\\ncustomers = pd.read_json('data/customers.json')\\n# 표의 크기를 확인해요. 앞 숫자가 행 수, 뒤 숫자가 열 수예요.\\nprint(customers.shape)\\n# 표 전체를 봐요. 맨 위 줄이 열 이름이에요.\\nprint(customers)\\n\"\ncases = [{}, {'files': {'data/customers.json': '[\\n  {\"customer_id\": \"C02\", \"region\": \"대전\", \"grade\": \"gold\"},\\n  {\"customer_id\": \"C04\", \"region\": \"서울\", \"grade\": \"bronze\"},\\n  {\"customer_id\": \"C06\", \"region\": \"광주\", \"grade\": \"silver\"}\\n]\\n'}}, {'files': {'data/customers.json': '[\\n  {\"customer_id\": \"C01\", \"region\": \"인천\", \"grade\": \"silver\"},\\n  {\"customer_id\": \"C03\", \"region\": \"부산\", \"grade\": \"gold\"},\\n  {\"customer_id\": \"C05\", \"region\": \"서울\", \"grade\": \"bronze\"},\\n  {\"customer_id\": \"C08\", \"region\": \"대구\", \"grade\": \"gold\"},\\n  {\"customer_id\": \"C09\", \"region\": \"서울\", \"grade\": \"silver\"},\\n  {\"customer_id\": \"C11\", \"region\": \"광주\", \"grade\": \"gold\"}\\n]\\n'}}]\nnames = ['customers']\nbase_files = {'data/customers.json': '[\\n  {\"customer_id\": \"C01\", \"region\": \"서울\", \"grade\": \"gold\"},\\n  {\"customer_id\": \"C02\", \"region\": \"부산\", \"grade\": \"silver\"},\\n  {\"customer_id\": \"C03\", \"region\": \"서울\", \"grade\": \"silver\"},\\n  {\"customer_id\": \"C05\", \"region\": \"대구\", \"grade\": \"gold\"}\\n]\\n'}\nsource = open(sys.argv[1], encoding='utf8').read()\n\n\nclass Inputs(ast.NodeTransformer):\n    # Replace only the first prepared assignment to each changed name.\n    def __init__(self, values):\n        self.values = values\n        self.seen = set()\n\n    def visit_Assign(self, node):\n        if len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):\n            name = node.targets[0].id\n            if name in self.values and name not in self.seen:\n                self.seen.add(name)\n                node.value = ast.parse(repr(self.values[name]), mode='eval').body\n        return node\n\n\ndef execute(text, values):\n    tree = ast.fix_missing_locations(Inputs(values).visit(ast.parse(text)))\n    scope = {'__name__': '__main__'}\n    output = io.StringIO()\n    with contextlib.redirect_stdout(output):\n        exec(compile(tree, 'main.py', 'exec'), scope)\n    plt = sys.modules.get('matplotlib.pyplot')\n    if plt is not None:\n        plt.close('all')\n    return output.getvalue().rstrip('\\n'), scope\n\n\ndef same(actual, expected):\n    pd = sys.modules.get('pandas')\n    if pd is not None and isinstance(expected, (pd.DataFrame, pd.Series, pd.Index)):\n        if type(actual) is not type(expected):\n            return False\n        try:\n            if isinstance(expected, pd.DataFrame):\n                pd.testing.assert_frame_equal(actual, expected)\n            elif isinstance(expected, pd.Series):\n                pd.testing.assert_series_equal(actual, expected)\n            else:\n                pd.testing.assert_index_equal(actual, expected)\n            return True\n        except AssertionError:\n            return False\n    np = sys.modules.get('numpy')\n    if np is not None and isinstance(expected, np.ndarray):\n        # Model and scaler outputs: same shape, and values equal up to float rounding.\n        if not isinstance(actual, np.ndarray) or actual.shape != expected.shape:\n            return False\n        if expected.dtype.kind in 'fc':\n            return bool(np.allclose(actual, expected, rtol=1e-7, atol=1e-9, equal_nan=True))\n        return bool(np.array_equal(actual, expected))\n    if isinstance(expected, float) and isinstance(actual, (int, float)):\n        return math.isclose(actual, expected, rel_tol=1e-9, abs_tol=1e-12)\n    try:\n        return bool(actual == expected)\n    except Exception:\n        return False\n\n\ndef fail(message):\n    # The learner reads only this message, never the checker's own traceback.\n    print(message, file=sys.stderr)\n    sys.exit(1)\n\n\ndef snapshot(inputs):\n    # Files the run created or changed, such as a saved result CSV.\n    produced = {}\n    for path in Path('.').rglob('*'):\n        if path.is_file() and inputs.get(path.as_posix()) != path.read_bytes():\n            produced[path.as_posix()] = path.read_bytes()\n    return produced\n\n\ndef run_in_fresh_folder(files, text, values):\n    # Each run gets its own copy of the data, so files one run writes never help another.\n    home = os.getcwd()\n    folder = tempfile.mkdtemp(dir=home)\n    try:\n        os.chdir(folder)\n        inputs = {}\n        for path, content in files.items():\n            target = Path(path)\n            target.parent.mkdir(parents=True, exist_ok=True)\n            target.write_text(content, encoding='utf8')\n            inputs[target.as_posix()] = target.read_bytes()\n        output, scope = execute(text, values)\n        return output, scope, snapshot(inputs)\n    finally:\n        os.chdir(home)\n        shutil.rmtree(folder, ignore_errors=True)\n\n\ndef describe(case):\n    parts = [name + ' = ' + repr(value) for name, value in case.items() if name != 'files']\n    parts += [path + ' 내용' for path in case.get('files', {})]\n    return ', '.join(parts)\n\n\nMESSAGES = {'__figures__': '그래프의 종류·축 이름·값이 기준 그래프와 달라요. 바뀐 자료로도 같은 그래프를 그리세요.'}\nfor index, case in enumerate(cases):\n    values = {k: v for k, v in case.items() if k != 'files'}\n    files = {**base_files, **case.get('files', {})}\n    expected, wanted, made = run_in_fresh_folder(files, reference, values)\n    changed = '준비 값을 ' + describe(case) + '(으)로 바꾸면 '\n    try:\n        actual, scope, produced = run_in_fresh_folder(files, source, values)\n    except SystemExit:\n        fail('코드가 exit로 중간에 끝났어요. 끝까지 실행되게 하세요.')\n    except BaseException as error:\n        reason = ''.join(traceback.format_exception_only(type(error), error)).strip()\n        fail(('코드를 실행하면' if index == 0 else changed.rstrip()) + ' 오류가 나요.\\n' + reason)\n    if index == 0:\n        problem = '실행 결과가 기대와 달라요.'\n    else:\n        problem = changed + '결과가 달라요.\\n값이나 자료가 바뀌어도 맞는 방법인지 확인하세요.'\n    if actual != expected:\n        fail(problem + '\\n기대 출력:\\n' + expected[-600:] + '\\n실제 출력:\\n' + actual[-600:])\n    for name in names:\n        if name not in scope:\n            fail(name + '에 결과를 담아 주세요.')\n        if not same(scope[name], wanted[name]):\n            fail(problem + '\\n' + MESSAGES.get(name, name + '의 값이 기대와 달라요.'))\n    for path in sorted(made):\n        if path not in produced:\n            fail(problem + '\\n' + path + ' 파일을 저장하지 않았어요.')\n        if produced[path] != made[path]:\n            fail(problem + '\\n저장한 ' + path + ' 파일의 내용이 기대와 달라요.')\nprint('준비 값과 자료를 바꿔도 같은 원리로 계산했어요.')\n"
+    },
+    {
+      "id": "merge-on",
+      "title": "같은 키로 두 표를 합쳐요",
+      "goal": "`pd.merge(왼쪽, 오른쪽, on='열')`은 두 표를 하나로 합쳐요.\non에 적은 열을 키라고 해요. 키 값이 같은 행끼리 옆으로 붙어요.\n이렇게 on만 적으면 두 표에 모두 있는 키만 남아요.\n\n먼저 실행해서 두 행 수를 보세요. 아직 합치지 않아서 같아요.\n`merged = orders`를 `merged = pd.merge(orders, customers, on='customer_id')`로 바꾸세요.\n다시 실행해서 행 수를 비교해요.\n고객 파일은 문제 아래 「함께 제공한 파일」에 있어요. 빠진 주문의 customer_id가 거기 있는지 보세요.",
+      "language": "python",
+      "entry_file": "main.py",
+      "starter_code": "import pandas as pd\n\n# 주문 표예요. 누가 샀는지 customer_id로 적혀 있어요.\norders = pd.read_csv('data/orders.csv')\n# 고객 표예요. 같은 이름의 customer_id 열이 있어요.\ncustomers = pd.read_json('data/customers.json')\n# 합친 결과를 merged에 담아요. 지금은 주문 표 그대로예요.\nmerged = orders\n# len(표)는 행 수예요. 합치기 전과 뒤를 비교해요.\nprint(len(orders), len(merged))\n# 합친 표를 확인해요.\nprint(merged)\n",
+      "solution": "import pandas as pd\n\n# 주문 표예요. 누가 샀는지 customer_id로 적혀 있어요.\norders = pd.read_csv('data/orders.csv')\n# 고객 표예요. 같은 이름의 customer_id 열이 있어요.\ncustomers = pd.read_json('data/customers.json')\n# customer_id가 같은 행끼리 합쳐 merged에 담아요.\nmerged = pd.merge(orders, customers, on='customer_id')\n# len(표)는 행 수예요. 합치기 전과 뒤를 비교해요.\nprint(len(orders), len(merged))\n# 합친 표를 확인해요.\nprint(merged)\n",
+      "files": {
+        "data/orders.csv": "order_id,customer_id,amount\nA101,C01,12000\nA102,C01,5000\nA103,C03,8000\nA104,C04,15000\nA105,C02,9000\nA106,C06,7000\n",
+        "data/customers.json": "[\n  {\"customer_id\": \"C01\", \"region\": \"서울\", \"grade\": \"gold\"},\n  {\"customer_id\": \"C02\", \"region\": \"부산\", \"grade\": \"silver\"},\n  {\"customer_id\": \"C03\", \"region\": \"서울\", \"grade\": \"silver\"},\n  {\"customer_id\": \"C05\", \"region\": \"대구\", \"grade\": \"gold\"}\n]\n"
+      },
+      "tests": [
+        {
+          "input": "",
+          "expected": "6 4\n  order_id customer_id  amount region   grade\n0     A101         C01   12000     서울    gold\n1     A102         C01    5000     서울    gold\n2     A103         C03    8000     서울  silver\n3     A105         C02    9000     부산  silver"
+        }
+      ],
+      "web_checks": [],
+      "git_checks": null,
+      "required": true,
+      "hints": [
+        "`pd.merge(orders, customers, on='customer_id')`로 써요. 열 이름은 따옴표로 감싸요."
+      ],
+      "narration": [
+        {
+          "action": "set_code",
+          "code": "import pandas as pd\n\n# 주문 표예요. 누가 샀는지 customer_id로 적혀 있어요.\norders = pd.read_csv('data/orders.csv')\n# 고객 표예요. 같은 이름의 customer_id 열이 있어요.\ncustomers = pd.read_json('data/customers.json')\n# 합친 결과를 merged에 담아요. 지금은 주문 표 그대로예요.\nmerged = orders\n# len(표)는 행 수예요. 합치기 전과 뒤를 비교해요.\nprint(len(orders), len(merged))\n# 합친 표를 확인해요.\nprint(merged)\n",
+          "say": "준비 코드를 먼저 실행해 볼게요."
+        },
+        {
+          "action": "run",
+          "expected_failure": false
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "실행 결과를 비교해요. / 5     A106         C06    7000"
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "text": "조심하세요. 두 표의 순서를 바꾸면 고객 표의 열이 앞에 와요."
+        },
+        {
+          "action": "patch_code",
+          "before": "# 합친 결과를 merged에 담아요. 지금은 주문 표 그대로예요.\nmerged = orders",
+          "after": "# customer_id가 같은 행끼리 합쳐 merged에 담아요.\nmerged = pd.merge(orders, customers, on='customer_id')",
+          "say": "작은 부분을 바꿔 원리를 확인해요."
+        },
+        {
+          "action": "run"
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "실행 결과를 비교해요.       C02    9000     부산  silver"
+        },
+        {
+          "action": "submit"
+        }
+      ],
+      "checker": "import ast\nimport builtins\nimport contextlib\nimport io\nimport math\nimport os\nfrom pathlib import Path\nimport shutil\nimport sys\nimport tempfile\nimport traceback\nimport warnings\n\nos.environ['MPLBACKEND'] = 'Agg'\n# Grading output is for the verdict only; font and library warnings would bury the reason.\nwarnings.filterwarnings('ignore')\nbuiltins.display = lambda *args, **kwargs: None\nreference = \"import pandas as pd\\n\\n# 주문 표예요. 누가 샀는지 customer_id로 적혀 있어요.\\norders = pd.read_csv('data/orders.csv')\\n# 고객 표예요. 같은 이름의 customer_id 열이 있어요.\\ncustomers = pd.read_json('data/customers.json')\\n# customer_id가 같은 행끼리 합쳐 merged에 담아요.\\nmerged = pd.merge(orders, customers, on='customer_id')\\n# len(표)는 행 수예요. 합치기 전과 뒤를 비교해요.\\nprint(len(orders), len(merged))\\n# 합친 표를 확인해요.\\nprint(merged)\\n\"\ncases = [{}, {'files': {'data/orders.csv': 'order_id,customer_id,amount\\nB201,C04,3000\\nB202,C02,11000\\nB203,C07,6500\\nB204,C07,4000\\nB205,C06,2000\\n', 'data/customers.json': '[\\n  {\"customer_id\": \"C02\", \"region\": \"대전\", \"grade\": \"gold\"},\\n  {\"customer_id\": \"C04\", \"region\": \"서울\", \"grade\": \"bronze\"},\\n  {\"customer_id\": \"C06\", \"region\": \"광주\", \"grade\": \"silver\"}\\n]\\n'}}, {'files': {'data/orders.csv': 'order_id,customer_id,amount\\nD301,C02,4500\\nD302,C03,13000\\nD303,C05,6000\\nD304,C05,8200\\nD305,C10,9900\\nD306,C08,3100\\nD307,C04,7600\\n', 'data/customers.json': '[\\n  {\"customer_id\": \"C01\", \"region\": \"인천\", \"grade\": \"silver\"},\\n  {\"customer_id\": \"C03\", \"region\": \"부산\", \"grade\": \"gold\"},\\n  {\"customer_id\": \"C05\", \"region\": \"서울\", \"grade\": \"bronze\"},\\n  {\"customer_id\": \"C08\", \"region\": \"대구\", \"grade\": \"gold\"},\\n  {\"customer_id\": \"C09\", \"region\": \"서울\", \"grade\": \"silver\"},\\n  {\"customer_id\": \"C11\", \"region\": \"광주\", \"grade\": \"gold\"}\\n]\\n'}}]\nnames = ['merged']\nbase_files = {'data/orders.csv': 'order_id,customer_id,amount\\nA101,C01,12000\\nA102,C01,5000\\nA103,C03,8000\\nA104,C04,15000\\nA105,C02,9000\\nA106,C06,7000\\n', 'data/customers.json': '[\\n  {\"customer_id\": \"C01\", \"region\": \"서울\", \"grade\": \"gold\"},\\n  {\"customer_id\": \"C02\", \"region\": \"부산\", \"grade\": \"silver\"},\\n  {\"customer_id\": \"C03\", \"region\": \"서울\", \"grade\": \"silver\"},\\n  {\"customer_id\": \"C05\", \"region\": \"대구\", \"grade\": \"gold\"}\\n]\\n'}\nsource = open(sys.argv[1], encoding='utf8').read()\n\n\nclass Inputs(ast.NodeTransformer):\n    # Replace only the first prepared assignment to each changed name.\n    def __init__(self, values):\n        self.values = values\n        self.seen = set()\n\n    def visit_Assign(self, node):\n        if len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):\n            name = node.targets[0].id\n            if name in self.values and name not in self.seen:\n                self.seen.add(name)\n                node.value = ast.parse(repr(self.values[name]), mode='eval').body\n        return node\n\n\ndef execute(text, values):\n    tree = ast.fix_missing_locations(Inputs(values).visit(ast.parse(text)))\n    scope = {'__name__': '__main__'}\n    output = io.StringIO()\n    with contextlib.redirect_stdout(output):\n        exec(compile(tree, 'main.py', 'exec'), scope)\n    plt = sys.modules.get('matplotlib.pyplot')\n    if plt is not None:\n        plt.close('all')\n    return output.getvalue().rstrip('\\n'), scope\n\n\ndef same(actual, expected):\n    pd = sys.modules.get('pandas')\n    if pd is not None and isinstance(expected, (pd.DataFrame, pd.Series, pd.Index)):\n        if type(actual) is not type(expected):\n            return False\n        try:\n            if isinstance(expected, pd.DataFrame):\n                pd.testing.assert_frame_equal(actual, expected)\n            elif isinstance(expected, pd.Series):\n                pd.testing.assert_series_equal(actual, expected)\n            else:\n                pd.testing.assert_index_equal(actual, expected)\n            return True\n        except AssertionError:\n            return False\n    np = sys.modules.get('numpy')\n    if np is not None and isinstance(expected, np.ndarray):\n        # Model and scaler outputs: same shape, and values equal up to float rounding.\n        if not isinstance(actual, np.ndarray) or actual.shape != expected.shape:\n            return False\n        if expected.dtype.kind in 'fc':\n            return bool(np.allclose(actual, expected, rtol=1e-7, atol=1e-9, equal_nan=True))\n        return bool(np.array_equal(actual, expected))\n    if isinstance(expected, float) and isinstance(actual, (int, float)):\n        return math.isclose(actual, expected, rel_tol=1e-9, abs_tol=1e-12)\n    try:\n        return bool(actual == expected)\n    except Exception:\n        return False\n\n\ndef fail(message):\n    # The learner reads only this message, never the checker's own traceback.\n    print(message, file=sys.stderr)\n    sys.exit(1)\n\n\ndef snapshot(inputs):\n    # Files the run created or changed, such as a saved result CSV.\n    produced = {}\n    for path in Path('.').rglob('*'):\n        if path.is_file() and inputs.get(path.as_posix()) != path.read_bytes():\n            produced[path.as_posix()] = path.read_bytes()\n    return produced\n\n\ndef run_in_fresh_folder(files, text, values):\n    # Each run gets its own copy of the data, so files one run writes never help another.\n    home = os.getcwd()\n    folder = tempfile.mkdtemp(dir=home)\n    try:\n        os.chdir(folder)\n        inputs = {}\n        for path, content in files.items():\n            target = Path(path)\n            target.parent.mkdir(parents=True, exist_ok=True)\n            target.write_text(content, encoding='utf8')\n            inputs[target.as_posix()] = target.read_bytes()\n        output, scope = execute(text, values)\n        return output, scope, snapshot(inputs)\n    finally:\n        os.chdir(home)\n        shutil.rmtree(folder, ignore_errors=True)\n\n\ndef describe(case):\n    parts = [name + ' = ' + repr(value) for name, value in case.items() if name != 'files']\n    parts += [path + ' 내용' for path in case.get('files', {})]\n    return ', '.join(parts)\n\n\nMESSAGES = {'__figures__': '그래프의 종류·축 이름·값이 기준 그래프와 달라요. 바뀐 자료로도 같은 그래프를 그리세요.'}\nfor index, case in enumerate(cases):\n    values = {k: v for k, v in case.items() if k != 'files'}\n    files = {**base_files, **case.get('files', {})}\n    expected, wanted, made = run_in_fresh_folder(files, reference, values)\n    changed = '준비 값을 ' + describe(case) + '(으)로 바꾸면 '\n    try:\n        actual, scope, produced = run_in_fresh_folder(files, source, values)\n    except SystemExit:\n        fail('코드가 exit로 중간에 끝났어요. 끝까지 실행되게 하세요.')\n    except BaseException as error:\n        reason = ''.join(traceback.format_exception_only(type(error), error)).strip()\n        fail(('코드를 실행하면' if index == 0 else changed.rstrip()) + ' 오류가 나요.\\n' + reason)\n    if index == 0:\n        problem = '실행 결과가 기대와 달라요.'\n    else:\n        problem = changed + '결과가 달라요.\\n값이나 자료가 바뀌어도 맞는 방법인지 확인하세요.'\n    if actual != expected:\n        fail(problem + '\\n기대 출력:\\n' + expected[-600:] + '\\n실제 출력:\\n' + actual[-600:])\n    for name in names:\n        if name not in scope:\n            fail(name + '에 결과를 담아 주세요.')\n        if not same(scope[name], wanted[name]):\n            fail(problem + '\\n' + MESSAGES.get(name, name + '의 값이 기대와 달라요.'))\n    for path in sorted(made):\n        if path not in produced:\n            fail(problem + '\\n' + path + ' 파일을 저장하지 않았어요.')\n        if produced[path] != made[path]:\n            fail(problem + '\\n저장한 ' + path + ' 파일의 내용이 기대와 달라요.')\nprint('준비 값과 자료를 바꿔도 같은 원리로 계산했어요.')\n"
+    },
+    {
+      "id": "how-left",
+      "title": "주문은 모두 남기고 빈칸으로 둬요",
+      "goal": "`how='left'`를 넣으면 왼쪽 표의 행을 모두 남겨요.\n짝이 없는 행의 오른쪽 열은 NaN(빈칸)이 돼요.\n`isna()`는 빈칸이면 True예요. `.sum()`을 붙이면 빈칸 수가 나와요.\n\n먼저 실행해서 두 행 수와 빈칸 수를 보세요.\n`on='customer_id'` 바로 뒤, 닫는 괄호 앞에 `, how='left'`를 넣으세요.\n다시 실행해서 행 수와 빈칸 수를 비교해요.\nNaN이 생긴 주문의 customer_id도 확인하세요.",
+      "language": "python",
+      "entry_file": "main.py",
+      "starter_code": "import pandas as pd\n\n# 주문 표와 고객 표를 읽어요.\norders = pd.read_csv('data/orders.csv')\ncustomers = pd.read_json('data/customers.json')\n# customer_id가 같은 행끼리 합쳐요.\nmerged = pd.merge(orders, customers, on='customer_id')\n# 합치기 전과 뒤의 행 수예요.\nprint(len(orders), len(merged))\n# grade가 빈칸인 행 수예요.\nprint(merged['grade'].isna().sum())\n# 합친 표를 확인해요.\nprint(merged)\n",
+      "solution": "import pandas as pd\n\n# 주문 표와 고객 표를 읽어요.\norders = pd.read_csv('data/orders.csv')\ncustomers = pd.read_json('data/customers.json')\n# customer_id가 같은 행끼리 합쳐요.\nmerged = pd.merge(orders, customers, on='customer_id', how='left')\n# 합치기 전과 뒤의 행 수예요.\nprint(len(orders), len(merged))\n# grade가 빈칸인 행 수예요.\nprint(merged['grade'].isna().sum())\n# 합친 표를 확인해요.\nprint(merged)\n",
+      "files": {
+        "data/orders.csv": "order_id,customer_id,amount\nA101,C01,12000\nA102,C01,5000\nA103,C03,8000\nA104,C04,15000\nA105,C02,9000\nA106,C06,7000\n",
+        "data/customers.json": "[\n  {\"customer_id\": \"C01\", \"region\": \"서울\", \"grade\": \"gold\"},\n  {\"customer_id\": \"C02\", \"region\": \"부산\", \"grade\": \"silver\"},\n  {\"customer_id\": \"C03\", \"region\": \"서울\", \"grade\": \"silver\"},\n  {\"customer_id\": \"C05\", \"region\": \"대구\", \"grade\": \"gold\"}\n]\n"
+      },
+      "tests": [
+        {
+          "input": "",
+          "expected": "6 6\n2\n  order_id customer_id  amount region   grade\n0     A101         C01   12000     서울    gold\n1     A102         C01    5000     서울    gold\n2     A103         C03    8000     서울  silver\n3     A104         C04   15000    NaN     NaN\n4     A105         C02    9000     부산  silver\n5     A106         C06    7000    NaN     NaN"
+        }
+      ],
+      "web_checks": [],
+      "git_checks": null,
+      "required": true,
+      "hints": [
+        "`pd.merge(orders, customers, on='customer_id', how='left')`처럼 써요."
+      ],
+      "narration": [
+        {
+          "action": "set_code",
+          "code": "import pandas as pd\n\n# 주문 표와 고객 표를 읽어요.\norders = pd.read_csv('data/orders.csv')\ncustomers = pd.read_json('data/customers.json')\n# customer_id가 같은 행끼리 합쳐요.\nmerged = pd.merge(orders, customers, on='customer_id')\n# 합치기 전과 뒤의 행 수예요.\nprint(len(orders), len(merged))\n# grade가 빈칸인 행 수예요.\nprint(merged['grade'].isna().sum())\n# 합친 표를 확인해요.\nprint(merged)\n",
+          "say": "준비 코드를 먼저 실행해 볼게요."
+        },
+        {
+          "action": "run",
+          "expected_failure": false
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "실행 결과를 비교해요.       C02    9000     부산  silver"
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "text": "조심하세요. `how='right'`로 쓰면 주문 대신 고객 표의 행이 모두 남아요."
+        },
+        {
+          "action": "patch_code",
+          "before": "on='customer_id')",
+          "after": "on='customer_id', how='left')",
+          "say": "작은 부분을 바꿔 원리를 확인해요."
+        },
+        {
+          "action": "run"
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "실행 결과를 비교해요.       C06    7000    NaN     NaN"
+        },
+        {
+          "action": "submit"
+        }
+      ],
+      "checker": "import ast\nimport builtins\nimport contextlib\nimport io\nimport math\nimport os\nfrom pathlib import Path\nimport shutil\nimport sys\nimport tempfile\nimport traceback\nimport warnings\n\nos.environ['MPLBACKEND'] = 'Agg'\n# Grading output is for the verdict only; font and library warnings would bury the reason.\nwarnings.filterwarnings('ignore')\nbuiltins.display = lambda *args, **kwargs: None\nreference = \"import pandas as pd\\n\\n# 주문 표와 고객 표를 읽어요.\\norders = pd.read_csv('data/orders.csv')\\ncustomers = pd.read_json('data/customers.json')\\n# customer_id가 같은 행끼리 합쳐요.\\nmerged = pd.merge(orders, customers, on='customer_id', how='left')\\n# 합치기 전과 뒤의 행 수예요.\\nprint(len(orders), len(merged))\\n# grade가 빈칸인 행 수예요.\\nprint(merged['grade'].isna().sum())\\n# 합친 표를 확인해요.\\nprint(merged)\\n\"\ncases = [{}, {'files': {'data/orders.csv': 'order_id,customer_id,amount\\nB201,C04,3000\\nB202,C02,11000\\nB203,C07,6500\\nB204,C07,4000\\nB205,C06,2000\\n', 'data/customers.json': '[\\n  {\"customer_id\": \"C02\", \"region\": \"대전\", \"grade\": \"gold\"},\\n  {\"customer_id\": \"C04\", \"region\": \"서울\", \"grade\": \"bronze\"},\\n  {\"customer_id\": \"C06\", \"region\": \"광주\", \"grade\": \"silver\"}\\n]\\n'}}, {'files': {'data/orders.csv': 'order_id,customer_id,amount\\nD301,C02,4500\\nD302,C03,13000\\nD303,C05,6000\\nD304,C05,8200\\nD305,C10,9900\\nD306,C08,3100\\nD307,C04,7600\\n', 'data/customers.json': '[\\n  {\"customer_id\": \"C01\", \"region\": \"인천\", \"grade\": \"silver\"},\\n  {\"customer_id\": \"C03\", \"region\": \"부산\", \"grade\": \"gold\"},\\n  {\"customer_id\": \"C05\", \"region\": \"서울\", \"grade\": \"bronze\"},\\n  {\"customer_id\": \"C08\", \"region\": \"대구\", \"grade\": \"gold\"},\\n  {\"customer_id\": \"C09\", \"region\": \"서울\", \"grade\": \"silver\"},\\n  {\"customer_id\": \"C11\", \"region\": \"광주\", \"grade\": \"gold\"}\\n]\\n'}}]\nnames = ['merged']\nbase_files = {'data/orders.csv': 'order_id,customer_id,amount\\nA101,C01,12000\\nA102,C01,5000\\nA103,C03,8000\\nA104,C04,15000\\nA105,C02,9000\\nA106,C06,7000\\n', 'data/customers.json': '[\\n  {\"customer_id\": \"C01\", \"region\": \"서울\", \"grade\": \"gold\"},\\n  {\"customer_id\": \"C02\", \"region\": \"부산\", \"grade\": \"silver\"},\\n  {\"customer_id\": \"C03\", \"region\": \"서울\", \"grade\": \"silver\"},\\n  {\"customer_id\": \"C05\", \"region\": \"대구\", \"grade\": \"gold\"}\\n]\\n'}\nsource = open(sys.argv[1], encoding='utf8').read()\n\n\nclass Inputs(ast.NodeTransformer):\n    # Replace only the first prepared assignment to each changed name.\n    def __init__(self, values):\n        self.values = values\n        self.seen = set()\n\n    def visit_Assign(self, node):\n        if len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):\n            name = node.targets[0].id\n            if name in self.values and name not in self.seen:\n                self.seen.add(name)\n                node.value = ast.parse(repr(self.values[name]), mode='eval').body\n        return node\n\n\ndef execute(text, values):\n    tree = ast.fix_missing_locations(Inputs(values).visit(ast.parse(text)))\n    scope = {'__name__': '__main__'}\n    output = io.StringIO()\n    with contextlib.redirect_stdout(output):\n        exec(compile(tree, 'main.py', 'exec'), scope)\n    plt = sys.modules.get('matplotlib.pyplot')\n    if plt is not None:\n        plt.close('all')\n    return output.getvalue().rstrip('\\n'), scope\n\n\ndef same(actual, expected):\n    pd = sys.modules.get('pandas')\n    if pd is not None and isinstance(expected, (pd.DataFrame, pd.Series, pd.Index)):\n        if type(actual) is not type(expected):\n            return False\n        try:\n            if isinstance(expected, pd.DataFrame):\n                pd.testing.assert_frame_equal(actual, expected)\n            elif isinstance(expected, pd.Series):\n                pd.testing.assert_series_equal(actual, expected)\n            else:\n                pd.testing.assert_index_equal(actual, expected)\n            return True\n        except AssertionError:\n            return False\n    np = sys.modules.get('numpy')\n    if np is not None and isinstance(expected, np.ndarray):\n        # Model and scaler outputs: same shape, and values equal up to float rounding.\n        if not isinstance(actual, np.ndarray) or actual.shape != expected.shape:\n            return False\n        if expected.dtype.kind in 'fc':\n            return bool(np.allclose(actual, expected, rtol=1e-7, atol=1e-9, equal_nan=True))\n        return bool(np.array_equal(actual, expected))\n    if isinstance(expected, float) and isinstance(actual, (int, float)):\n        return math.isclose(actual, expected, rel_tol=1e-9, abs_tol=1e-12)\n    try:\n        return bool(actual == expected)\n    except Exception:\n        return False\n\n\ndef fail(message):\n    # The learner reads only this message, never the checker's own traceback.\n    print(message, file=sys.stderr)\n    sys.exit(1)\n\n\ndef snapshot(inputs):\n    # Files the run created or changed, such as a saved result CSV.\n    produced = {}\n    for path in Path('.').rglob('*'):\n        if path.is_file() and inputs.get(path.as_posix()) != path.read_bytes():\n            produced[path.as_posix()] = path.read_bytes()\n    return produced\n\n\ndef run_in_fresh_folder(files, text, values):\n    # Each run gets its own copy of the data, so files one run writes never help another.\n    home = os.getcwd()\n    folder = tempfile.mkdtemp(dir=home)\n    try:\n        os.chdir(folder)\n        inputs = {}\n        for path, content in files.items():\n            target = Path(path)\n            target.parent.mkdir(parents=True, exist_ok=True)\n            target.write_text(content, encoding='utf8')\n            inputs[target.as_posix()] = target.read_bytes()\n        output, scope = execute(text, values)\n        return output, scope, snapshot(inputs)\n    finally:\n        os.chdir(home)\n        shutil.rmtree(folder, ignore_errors=True)\n\n\ndef describe(case):\n    parts = [name + ' = ' + repr(value) for name, value in case.items() if name != 'files']\n    parts += [path + ' 내용' for path in case.get('files', {})]\n    return ', '.join(parts)\n\n\nMESSAGES = {'__figures__': '그래프의 종류·축 이름·값이 기준 그래프와 달라요. 바뀐 자료로도 같은 그래프를 그리세요.'}\nfor index, case in enumerate(cases):\n    values = {k: v for k, v in case.items() if k != 'files'}\n    files = {**base_files, **case.get('files', {})}\n    expected, wanted, made = run_in_fresh_folder(files, reference, values)\n    changed = '준비 값을 ' + describe(case) + '(으)로 바꾸면 '\n    try:\n        actual, scope, produced = run_in_fresh_folder(files, source, values)\n    except SystemExit:\n        fail('코드가 exit로 중간에 끝났어요. 끝까지 실행되게 하세요.')\n    except BaseException as error:\n        reason = ''.join(traceback.format_exception_only(type(error), error)).strip()\n        fail(('코드를 실행하면' if index == 0 else changed.rstrip()) + ' 오류가 나요.\\n' + reason)\n    if index == 0:\n        problem = '실행 결과가 기대와 달라요.'\n    else:\n        problem = changed + '결과가 달라요.\\n값이나 자료가 바뀌어도 맞는 방법인지 확인하세요.'\n    if actual != expected:\n        fail(problem + '\\n기대 출력:\\n' + expected[-600:] + '\\n실제 출력:\\n' + actual[-600:])\n    for name in names:\n        if name not in scope:\n            fail(name + '에 결과를 담아 주세요.')\n        if not same(scope[name], wanted[name]):\n            fail(problem + '\\n' + MESSAGES.get(name, name + '의 값이 기대와 달라요.'))\n    for path in sorted(made):\n        if path not in produced:\n            fail(problem + '\\n' + path + ' 파일을 저장하지 않았어요.')\n        if produced[path] != made[path]:\n            fail(problem + '\\n저장한 ' + path + ' 파일의 내용이 기대와 달라요.')\nprint('준비 값과 자료를 바꿔도 같은 원리로 계산했어요.')\n"
+    },
+    {
+      "id": "left-right-on",
+      "title": "키 열 이름이 서로 달라요",
+      "goal": "두 표가 같은 키를 다른 이름으로 적기도 해요.\n그럴 땐 `left_on`에 왼쪽 표의 열, `right_on`에 오른쪽 표의 열을 적어요.\n합친 표에는 두 키 열이 모두 남아요.\n\n먼저 실행해서 두 열 이름 목록과 KeyError를 보세요.\nKeyError는 그런 이름의 열이 없다는 뜻이에요. 어느 표에 없는지 두 목록에서 찾아요.\n`on='customer_id'`를 `left_on='customer_id', right_on='member_id'`로 바꾸세요.\n다시 실행해서 합친 표의 두 키 열을 비교해요.",
+      "language": "python",
+      "entry_file": "main.py",
+      "starter_code": "import pandas as pd\n\n# 주문 표와 회원 표를 읽어요.\norders = pd.read_csv('data/orders.csv')\nmembers = pd.read_json('data/members.json')\n# 두 표의 열 이름을 리스트로 바꿔 확인해요.\nprint(orders.columns.tolist())\nprint(members.columns.tolist())\n# 주문은 모두 남기고 회원 정보를 붙여요.\nmerged = pd.merge(orders, members, on='customer_id', how='left')\n# 합치기 전과 뒤의 행 수와 합친 표를 봐요.\nprint(len(orders), len(merged))\nprint(merged)\n",
+      "solution": "import pandas as pd\n\n# 주문 표와 회원 표를 읽어요.\norders = pd.read_csv('data/orders.csv')\nmembers = pd.read_json('data/members.json')\n# 두 표의 열 이름을 리스트로 바꿔 확인해요.\nprint(orders.columns.tolist())\nprint(members.columns.tolist())\n# 주문은 모두 남기고 회원 정보를 붙여요.\nmerged = pd.merge(orders, members, left_on='customer_id', right_on='member_id', how='left')\n# 합치기 전과 뒤의 행 수와 합친 표를 봐요.\nprint(len(orders), len(merged))\nprint(merged)\n",
+      "files": {
+        "data/orders.csv": "order_id,customer_id,amount\nA101,C01,12000\nA102,C01,5000\nA103,C03,8000\nA104,C04,15000\nA105,C02,9000\nA106,C06,7000\n",
+        "data/members.json": "[\n  {\"member_id\": \"C01\", \"region\": \"서울\", \"grade\": \"gold\"},\n  {\"member_id\": \"C02\", \"region\": \"부산\", \"grade\": \"silver\"},\n  {\"member_id\": \"C03\", \"region\": \"서울\", \"grade\": \"silver\"},\n  {\"member_id\": \"C05\", \"region\": \"대구\", \"grade\": \"gold\"}\n]\n"
+      },
+      "tests": [
+        {
+          "input": "",
+          "expected": "['order_id', 'customer_id', 'amount']\n['member_id', 'region', 'grade']\n6 6\n  order_id customer_id  amount member_id region   grade\n0     A101         C01   12000       C01     서울    gold\n1     A102         C01    5000       C01     서울    gold\n2     A103         C03    8000       C03     서울  silver\n3     A104         C04   15000       NaN    NaN     NaN\n4     A105         C02    9000       C02     부산  silver\n5     A106         C06    7000       NaN    NaN     NaN"
+        }
+      ],
+      "web_checks": [],
+      "git_checks": null,
+      "required": true,
+      "hints": [
+        "`left_on='customer_id', right_on='member_id'`처럼 두 이름을 따로 적어요."
+      ],
+      "narration": [
+        {
+          "action": "set_code",
+          "code": "import pandas as pd\n\n# 주문 표와 회원 표를 읽어요.\norders = pd.read_csv('data/orders.csv')\nmembers = pd.read_json('data/members.json')\n# 두 표의 열 이름을 리스트로 바꿔 확인해요.\nprint(orders.columns.tolist())\nprint(members.columns.tolist())\n# 주문은 모두 남기고 회원 정보를 붙여요.\nmerged = pd.merge(orders, members, on='customer_id', how='left')\n# 합치기 전과 뒤의 행 수와 합친 표를 봐요.\nprint(len(orders), len(merged))\nprint(merged)\n",
+          "say": "준비 코드를 먼저 실행해 볼게요."
+        },
+        {
+          "action": "run",
+          "expected_failure": true
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "지금 코드는 검사를 통과하지 못해요."
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "text": "조심하세요. 왼쪽과 오른쪽 열 이름을 바꿔 적으면 KeyError가 나요."
+        },
+        {
+          "action": "patch_code",
+          "before": "on='customer_id'",
+          "after": "left_on='customer_id', right_on='member_id'",
+          "say": "작은 부분을 바꿔 원리를 확인해요."
+        },
+        {
+          "action": "run"
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "실행 결과를 비교해요.    7000       NaN    NaN     NaN"
+        },
+        {
+          "action": "submit"
+        }
+      ],
+      "checker": "import ast\nimport builtins\nimport contextlib\nimport io\nimport math\nimport os\nfrom pathlib import Path\nimport shutil\nimport sys\nimport tempfile\nimport traceback\nimport warnings\n\nos.environ['MPLBACKEND'] = 'Agg'\n# Grading output is for the verdict only; font and library warnings would bury the reason.\nwarnings.filterwarnings('ignore')\nbuiltins.display = lambda *args, **kwargs: None\nreference = \"import pandas as pd\\n\\n# 주문 표와 회원 표를 읽어요.\\norders = pd.read_csv('data/orders.csv')\\nmembers = pd.read_json('data/members.json')\\n# 두 표의 열 이름을 리스트로 바꿔 확인해요.\\nprint(orders.columns.tolist())\\nprint(members.columns.tolist())\\n# 주문은 모두 남기고 회원 정보를 붙여요.\\nmerged = pd.merge(orders, members, left_on='customer_id', right_on='member_id', how='left')\\n# 합치기 전과 뒤의 행 수와 합친 표를 봐요.\\nprint(len(orders), len(merged))\\nprint(merged)\\n\"\ncases = [{}, {'files': {'data/orders.csv': 'order_id,customer_id,amount\\nB201,C04,3000\\nB202,C02,11000\\nB203,C07,6500\\nB204,C07,4000\\nB205,C06,2000\\n', 'data/members.json': '[\\n  {\"member_id\": \"C02\", \"region\": \"대전\", \"grade\": \"gold\"},\\n  {\"member_id\": \"C04\", \"region\": \"서울\", \"grade\": \"bronze\"},\\n  {\"member_id\": \"C06\", \"region\": \"광주\", \"grade\": \"silver\"}\\n]\\n'}}, {'files': {'data/orders.csv': 'order_id,customer_id,amount\\nD301,C02,4500\\nD302,C03,13000\\nD303,C05,6000\\nD304,C05,8200\\nD305,C10,9900\\nD306,C08,3100\\nD307,C04,7600\\n', 'data/members.json': '[\\n  {\"member_id\": \"C01\", \"region\": \"인천\", \"grade\": \"silver\"},\\n  {\"member_id\": \"C03\", \"region\": \"부산\", \"grade\": \"gold\"},\\n  {\"member_id\": \"C05\", \"region\": \"서울\", \"grade\": \"bronze\"},\\n  {\"member_id\": \"C08\", \"region\": \"대구\", \"grade\": \"gold\"},\\n  {\"member_id\": \"C09\", \"region\": \"서울\", \"grade\": \"silver\"},\\n  {\"member_id\": \"C11\", \"region\": \"광주\", \"grade\": \"gold\"}\\n]\\n'}}]\nnames = ['merged']\nbase_files = {'data/orders.csv': 'order_id,customer_id,amount\\nA101,C01,12000\\nA102,C01,5000\\nA103,C03,8000\\nA104,C04,15000\\nA105,C02,9000\\nA106,C06,7000\\n', 'data/members.json': '[\\n  {\"member_id\": \"C01\", \"region\": \"서울\", \"grade\": \"gold\"},\\n  {\"member_id\": \"C02\", \"region\": \"부산\", \"grade\": \"silver\"},\\n  {\"member_id\": \"C03\", \"region\": \"서울\", \"grade\": \"silver\"},\\n  {\"member_id\": \"C05\", \"region\": \"대구\", \"grade\": \"gold\"}\\n]\\n'}\nsource = open(sys.argv[1], encoding='utf8').read()\n\n\nclass Inputs(ast.NodeTransformer):\n    # Replace only the first prepared assignment to each changed name.\n    def __init__(self, values):\n        self.values = values\n        self.seen = set()\n\n    def visit_Assign(self, node):\n        if len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):\n            name = node.targets[0].id\n            if name in self.values and name not in self.seen:\n                self.seen.add(name)\n                node.value = ast.parse(repr(self.values[name]), mode='eval').body\n        return node\n\n\ndef execute(text, values):\n    tree = ast.fix_missing_locations(Inputs(values).visit(ast.parse(text)))\n    scope = {'__name__': '__main__'}\n    output = io.StringIO()\n    with contextlib.redirect_stdout(output):\n        exec(compile(tree, 'main.py', 'exec'), scope)\n    plt = sys.modules.get('matplotlib.pyplot')\n    if plt is not None:\n        plt.close('all')\n    return output.getvalue().rstrip('\\n'), scope\n\n\ndef same(actual, expected):\n    pd = sys.modules.get('pandas')\n    if pd is not None and isinstance(expected, (pd.DataFrame, pd.Series, pd.Index)):\n        if type(actual) is not type(expected):\n            return False\n        try:\n            if isinstance(expected, pd.DataFrame):\n                pd.testing.assert_frame_equal(actual, expected)\n            elif isinstance(expected, pd.Series):\n                pd.testing.assert_series_equal(actual, expected)\n            else:\n                pd.testing.assert_index_equal(actual, expected)\n            return True\n        except AssertionError:\n            return False\n    np = sys.modules.get('numpy')\n    if np is not None and isinstance(expected, np.ndarray):\n        # Model and scaler outputs: same shape, and values equal up to float rounding.\n        if not isinstance(actual, np.ndarray) or actual.shape != expected.shape:\n            return False\n        if expected.dtype.kind in 'fc':\n            return bool(np.allclose(actual, expected, rtol=1e-7, atol=1e-9, equal_nan=True))\n        return bool(np.array_equal(actual, expected))\n    if isinstance(expected, float) and isinstance(actual, (int, float)):\n        return math.isclose(actual, expected, rel_tol=1e-9, abs_tol=1e-12)\n    try:\n        return bool(actual == expected)\n    except Exception:\n        return False\n\n\ndef fail(message):\n    # The learner reads only this message, never the checker's own traceback.\n    print(message, file=sys.stderr)\n    sys.exit(1)\n\n\ndef snapshot(inputs):\n    # Files the run created or changed, such as a saved result CSV.\n    produced = {}\n    for path in Path('.').rglob('*'):\n        if path.is_file() and inputs.get(path.as_posix()) != path.read_bytes():\n            produced[path.as_posix()] = path.read_bytes()\n    return produced\n\n\ndef run_in_fresh_folder(files, text, values):\n    # Each run gets its own copy of the data, so files one run writes never help another.\n    home = os.getcwd()\n    folder = tempfile.mkdtemp(dir=home)\n    try:\n        os.chdir(folder)\n        inputs = {}\n        for path, content in files.items():\n            target = Path(path)\n            target.parent.mkdir(parents=True, exist_ok=True)\n            target.write_text(content, encoding='utf8')\n            inputs[target.as_posix()] = target.read_bytes()\n        output, scope = execute(text, values)\n        return output, scope, snapshot(inputs)\n    finally:\n        os.chdir(home)\n        shutil.rmtree(folder, ignore_errors=True)\n\n\ndef describe(case):\n    parts = [name + ' = ' + repr(value) for name, value in case.items() if name != 'files']\n    parts += [path + ' 내용' for path in case.get('files', {})]\n    return ', '.join(parts)\n\n\nMESSAGES = {'__figures__': '그래프의 종류·축 이름·값이 기준 그래프와 달라요. 바뀐 자료로도 같은 그래프를 그리세요.'}\nfor index, case in enumerate(cases):\n    values = {k: v for k, v in case.items() if k != 'files'}\n    files = {**base_files, **case.get('files', {})}\n    expected, wanted, made = run_in_fresh_folder(files, reference, values)\n    changed = '준비 값을 ' + describe(case) + '(으)로 바꾸면 '\n    try:\n        actual, scope, produced = run_in_fresh_folder(files, source, values)\n    except SystemExit:\n        fail('코드가 exit로 중간에 끝났어요. 끝까지 실행되게 하세요.')\n    except BaseException as error:\n        reason = ''.join(traceback.format_exception_only(type(error), error)).strip()\n        fail(('코드를 실행하면' if index == 0 else changed.rstrip()) + ' 오류가 나요.\\n' + reason)\n    if index == 0:\n        problem = '실행 결과가 기대와 달라요.'\n    else:\n        problem = changed + '결과가 달라요.\\n값이나 자료가 바뀌어도 맞는 방법인지 확인하세요.'\n    if actual != expected:\n        fail(problem + '\\n기대 출력:\\n' + expected[-600:] + '\\n실제 출력:\\n' + actual[-600:])\n    for name in names:\n        if name not in scope:\n            fail(name + '에 결과를 담아 주세요.')\n        if not same(scope[name], wanted[name]):\n            fail(problem + '\\n' + MESSAGES.get(name, name + '의 값이 기대와 달라요.'))\n    for path in sorted(made):\n        if path not in produced:\n            fail(problem + '\\n' + path + ' 파일을 저장하지 않았어요.')\n        if produced[path] != made[path]:\n            fail(problem + '\\n저장한 ' + path + ' 파일의 내용이 기대와 달라요.')\nprint('준비 값과 자료를 바꿔도 같은 원리로 계산했어요.')\n"
+    },
+    {
+      "id": "key-dtype",
+      "title": "두 키의 자료형을 맞춰요",
+      "goal": "merge는 키 값이 같아야 짝을 지어요. 정수 101과 글자 '101'은 달라요.\n두 키가 정수 열과 글자 열이면 merge가 ValueError를 내요.\n`astype(str)`로 정수 쪽을 글자로 바꾸면 두 키가 맞아요.\n\n먼저 실행해서 두 키의 자료형과 오류의 마지막 줄을 보세요. 오류가 권하는 `pd.concat`은 여기서 답이 아니에요.\n주문 키는 비회원이 섞여 글자 열이에요. str이나 object로 보여요. 고객 키의 int64는 정수 열이에요.\n`# 이 아래에서 두 키의 자료형을 맞춰요.` 주석 아래에 `customers['customer_id'] = customers['customer_id'].astype(str)`을 넣으세요.\n다시 실행해서 두 자료형과 합친 표를 확인해요.",
+      "language": "python",
+      "entry_file": "main.py",
+      "starter_code": "import pandas as pd\n\n# 매장 주문이에요. 회원이 아니면 비회원으로 적었어요.\norders = pd.read_csv('data/shop_orders.csv')\n# 고객 파일의 customer_id는 따옴표 없는 숫자예요.\ncustomers = pd.read_json('data/shop_customers.json')\n# 이 아래에서 두 키의 자료형을 맞춰요.\n# 열 하나의 자료형은 dtype으로 봐요.\nprint(orders['customer_id'].dtype, customers['customer_id'].dtype)\n# 주문은 모두 남기고 고객 정보를 붙여요.\nmerged = pd.merge(orders, customers, on='customer_id', how='left')\n# 합치기 전과 뒤의 행 수와 합친 표를 봐요.\nprint(len(orders), len(merged))\nprint(merged)\n",
+      "solution": "import pandas as pd\n\n# 매장 주문이에요. 회원이 아니면 비회원으로 적었어요.\norders = pd.read_csv('data/shop_orders.csv')\n# 고객 파일의 customer_id는 따옴표 없는 숫자예요.\ncustomers = pd.read_json('data/shop_customers.json')\n# 이 아래에서 두 키의 자료형을 맞춰요.\ncustomers['customer_id'] = customers['customer_id'].astype(str)\n# 열 하나의 자료형은 dtype으로 봐요.\nprint(orders['customer_id'].dtype, customers['customer_id'].dtype)\n# 주문은 모두 남기고 고객 정보를 붙여요.\nmerged = pd.merge(orders, customers, on='customer_id', how='left')\n# 합치기 전과 뒤의 행 수와 합친 표를 봐요.\nprint(len(orders), len(merged))\nprint(merged)\n",
+      "files": {
+        "data/shop_orders.csv": "order_id,customer_id,amount\nS01,101,12000\nS02,비회원,5000\nS03,103,8000\nS04,104,15000\nS05,103,6000\n",
+        "data/shop_customers.json": "[\n  {\"customer_id\": 101, \"region\": \"서울\", \"grade\": \"gold\"},\n  {\"customer_id\": 103, \"region\": \"부산\", \"grade\": \"silver\"},\n  {\"customer_id\": 105, \"region\": \"대구\", \"grade\": \"gold\"}\n]\n"
+      },
+      "tests": [
+        {
+          "input": "",
+          "expected": "str str\n5 5\n  order_id customer_id  amount region   grade\n0      S01         101   12000     서울    gold\n1      S02         비회원    5000    NaN     NaN\n2      S03         103    8000     부산  silver\n3      S04         104   15000    NaN     NaN\n4      S05         103    6000     부산  silver"
+        }
+      ],
+      "web_checks": [],
+      "git_checks": null,
+      "required": true,
+      "hints": [
+        "주석 아래에 `customers['customer_id'] = customers['customer_id'].astype(str)`을 넣어요."
+      ],
+      "narration": [
+        {
+          "action": "set_code",
+          "code": "import pandas as pd\n\n# 매장 주문이에요. 회원이 아니면 비회원으로 적었어요.\norders = pd.read_csv('data/shop_orders.csv')\n# 고객 파일의 customer_id는 따옴표 없는 숫자예요.\ncustomers = pd.read_json('data/shop_customers.json')\n# 이 아래에서 두 키의 자료형을 맞춰요.\n# 열 하나의 자료형은 dtype으로 봐요.\nprint(orders['customer_id'].dtype, customers['customer_id'].dtype)\n# 주문은 모두 남기고 고객 정보를 붙여요.\nmerged = pd.merge(orders, customers, on='customer_id', how='left')\n# 합치기 전과 뒤의 행 수와 합친 표를 봐요.\nprint(len(orders), len(merged))\nprint(merged)\n",
+          "say": "준비 코드를 먼저 실행해 볼게요."
+        },
+        {
+          "action": "run",
+          "expected_failure": true
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "지금 코드는 검사를 통과하지 못해요."
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "text": "조심하세요. 주문 키를 `astype(int)`로 바꾸면 비회원 때문에 ValueError가 나요."
+        },
+        {
+          "action": "patch_code",
+          "before": "# 이 아래에서 두 키의 자료형을 맞춰요.",
+          "after": "# 이 아래에서 두 키의 자료형을 맞춰요.\ncustomers['customer_id'] = customers['customer_id'].astype(str)",
+          "say": "작은 부분을 바꿔 원리를 확인해요."
+        },
+        {
+          "action": "run"
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "실행 결과를 비교해요.       103    6000     부산  silver"
+        },
+        {
+          "action": "submit"
+        }
+      ],
+      "checker": "import ast\nimport builtins\nimport contextlib\nimport io\nimport math\nimport os\nfrom pathlib import Path\nimport shutil\nimport sys\nimport tempfile\nimport traceback\nimport warnings\n\nos.environ['MPLBACKEND'] = 'Agg'\n# Grading output is for the verdict only; font and library warnings would bury the reason.\nwarnings.filterwarnings('ignore')\nbuiltins.display = lambda *args, **kwargs: None\nreference = \"import pandas as pd\\n\\n# 매장 주문이에요. 회원이 아니면 비회원으로 적었어요.\\norders = pd.read_csv('data/shop_orders.csv')\\n# 고객 파일의 customer_id는 따옴표 없는 숫자예요.\\ncustomers = pd.read_json('data/shop_customers.json')\\n# 이 아래에서 두 키의 자료형을 맞춰요.\\ncustomers['customer_id'] = customers['customer_id'].astype(str)\\n# 열 하나의 자료형은 dtype으로 봐요.\\nprint(orders['customer_id'].dtype, customers['customer_id'].dtype)\\n# 주문은 모두 남기고 고객 정보를 붙여요.\\nmerged = pd.merge(orders, customers, on='customer_id', how='left')\\n# 합치기 전과 뒤의 행 수와 합친 표를 봐요.\\nprint(len(orders), len(merged))\\nprint(merged)\\n\"\ncases = [{}, {'files': {'data/shop_orders.csv': 'order_id,customer_id,amount\\nS11,비회원,7000\\nS12,102,3000\\nS13,107,9500\\nS14,비회원,4000\\n', 'data/shop_customers.json': '[\\n  {\"customer_id\": 102, \"region\": \"광주\", \"grade\": \"silver\"},\\n  {\"customer_id\": 107, \"region\": \"서울\", \"grade\": \"bronze\"},\\n  {\"customer_id\": 108, \"region\": \"대전\", \"grade\": \"gold\"}\\n]\\n'}}, {'files': {'data/shop_orders.csv': 'order_id,customer_id,amount\\nS21,110,5500\\nS22,111,8800\\nS23,비회원,2500\\nS24,112,13000\\nS25,110,4100\\nS26,113,6600\\n', 'data/shop_customers.json': '[\\n  {\"customer_id\": 110, \"region\": \"부산\", \"grade\": \"gold\"},\\n  {\"customer_id\": 112, \"region\": \"인천\", \"grade\": \"silver\"},\\n  {\"customer_id\": 113, \"region\": \"서울\", \"grade\": \"silver\"},\\n  {\"customer_id\": 114, \"region\": \"대구\", \"grade\": \"bronze\"}\\n]\\n'}}]\nnames = ['merged']\nbase_files = {'data/shop_orders.csv': 'order_id,customer_id,amount\\nS01,101,12000\\nS02,비회원,5000\\nS03,103,8000\\nS04,104,15000\\nS05,103,6000\\n', 'data/shop_customers.json': '[\\n  {\"customer_id\": 101, \"region\": \"서울\", \"grade\": \"gold\"},\\n  {\"customer_id\": 103, \"region\": \"부산\", \"grade\": \"silver\"},\\n  {\"customer_id\": 105, \"region\": \"대구\", \"grade\": \"gold\"}\\n]\\n'}\nsource = open(sys.argv[1], encoding='utf8').read()\n\n\nclass Inputs(ast.NodeTransformer):\n    # Replace only the first prepared assignment to each changed name.\n    def __init__(self, values):\n        self.values = values\n        self.seen = set()\n\n    def visit_Assign(self, node):\n        if len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):\n            name = node.targets[0].id\n            if name in self.values and name not in self.seen:\n                self.seen.add(name)\n                node.value = ast.parse(repr(self.values[name]), mode='eval').body\n        return node\n\n\ndef execute(text, values):\n    tree = ast.fix_missing_locations(Inputs(values).visit(ast.parse(text)))\n    scope = {'__name__': '__main__'}\n    output = io.StringIO()\n    with contextlib.redirect_stdout(output):\n        exec(compile(tree, 'main.py', 'exec'), scope)\n    plt = sys.modules.get('matplotlib.pyplot')\n    if plt is not None:\n        plt.close('all')\n    return output.getvalue().rstrip('\\n'), scope\n\n\ndef same(actual, expected):\n    pd = sys.modules.get('pandas')\n    if pd is not None and isinstance(expected, (pd.DataFrame, pd.Series, pd.Index)):\n        if type(actual) is not type(expected):\n            return False\n        try:\n            if isinstance(expected, pd.DataFrame):\n                pd.testing.assert_frame_equal(actual, expected)\n            elif isinstance(expected, pd.Series):\n                pd.testing.assert_series_equal(actual, expected)\n            else:\n                pd.testing.assert_index_equal(actual, expected)\n            return True\n        except AssertionError:\n            return False\n    np = sys.modules.get('numpy')\n    if np is not None and isinstance(expected, np.ndarray):\n        # Model and scaler outputs: same shape, and values equal up to float rounding.\n        if not isinstance(actual, np.ndarray) or actual.shape != expected.shape:\n            return False\n        if expected.dtype.kind in 'fc':\n            return bool(np.allclose(actual, expected, rtol=1e-7, atol=1e-9, equal_nan=True))\n        return bool(np.array_equal(actual, expected))\n    if isinstance(expected, float) and isinstance(actual, (int, float)):\n        return math.isclose(actual, expected, rel_tol=1e-9, abs_tol=1e-12)\n    try:\n        return bool(actual == expected)\n    except Exception:\n        return False\n\n\ndef fail(message):\n    # The learner reads only this message, never the checker's own traceback.\n    print(message, file=sys.stderr)\n    sys.exit(1)\n\n\ndef snapshot(inputs):\n    # Files the run created or changed, such as a saved result CSV.\n    produced = {}\n    for path in Path('.').rglob('*'):\n        if path.is_file() and inputs.get(path.as_posix()) != path.read_bytes():\n            produced[path.as_posix()] = path.read_bytes()\n    return produced\n\n\ndef run_in_fresh_folder(files, text, values):\n    # Each run gets its own copy of the data, so files one run writes never help another.\n    home = os.getcwd()\n    folder = tempfile.mkdtemp(dir=home)\n    try:\n        os.chdir(folder)\n        inputs = {}\n        for path, content in files.items():\n            target = Path(path)\n            target.parent.mkdir(parents=True, exist_ok=True)\n            target.write_text(content, encoding='utf8')\n            inputs[target.as_posix()] = target.read_bytes()\n        output, scope = execute(text, values)\n        return output, scope, snapshot(inputs)\n    finally:\n        os.chdir(home)\n        shutil.rmtree(folder, ignore_errors=True)\n\n\ndef describe(case):\n    parts = [name + ' = ' + repr(value) for name, value in case.items() if name != 'files']\n    parts += [path + ' 내용' for path in case.get('files', {})]\n    return ', '.join(parts)\n\n\nMESSAGES = {'__figures__': '그래프의 종류·축 이름·값이 기준 그래프와 달라요. 바뀐 자료로도 같은 그래프를 그리세요.'}\nfor index, case in enumerate(cases):\n    values = {k: v for k, v in case.items() if k != 'files'}\n    files = {**base_files, **case.get('files', {})}\n    expected, wanted, made = run_in_fresh_folder(files, reference, values)\n    changed = '준비 값을 ' + describe(case) + '(으)로 바꾸면 '\n    try:\n        actual, scope, produced = run_in_fresh_folder(files, source, values)\n    except SystemExit:\n        fail('코드가 exit로 중간에 끝났어요. 끝까지 실행되게 하세요.')\n    except BaseException as error:\n        reason = ''.join(traceback.format_exception_only(type(error), error)).strip()\n        fail(('코드를 실행하면' if index == 0 else changed.rstrip()) + ' 오류가 나요.\\n' + reason)\n    if index == 0:\n        problem = '실행 결과가 기대와 달라요.'\n    else:\n        problem = changed + '결과가 달라요.\\n값이나 자료가 바뀌어도 맞는 방법인지 확인하세요.'\n    if actual != expected:\n        fail(problem + '\\n기대 출력:\\n' + expected[-600:] + '\\n실제 출력:\\n' + actual[-600:])\n    for name in names:\n        if name not in scope:\n            fail(name + '에 결과를 담아 주세요.')\n        if not same(scope[name], wanted[name]):\n            fail(problem + '\\n' + MESSAGES.get(name, name + '의 값이 기대와 달라요.'))\n    for path in sorted(made):\n        if path not in produced:\n            fail(problem + '\\n' + path + ' 파일을 저장하지 않았어요.')\n        if produced[path] != made[path]:\n            fail(problem + '\\n저장한 ' + path + ' 파일의 내용이 기대와 달라요.')\nprint('준비 값과 자료를 바꿔도 같은 원리로 계산했어요.')\n"
+    },
+    {
+      "id": "duplicate-key",
+      "title": "합친 뒤 행 수가 늘었어요",
+      "goal": "오른쪽 표에 같은 키가 두 번 있으면 왼쪽 행이 두 번 붙어요.\n그래서 합친 뒤에는 행 수를 꼭 확인해요.\n`drop_duplicates(subset='customer_id')`는 id가 같은 행 중 맨 위 행만 남겨요.\n\n먼저 실행해서 두 행 수를 보세요. `how='left'`인데 늘었죠?\n합친 표에서 두 번 나온 order_id를 찾아보세요. 같은 customer_id는 주문이 여럿이면 원래 여러 번 나와요.\n이 문제의 고객 파일은 앞 문제와 달라요. 문제 아래 「함께 제공한 파일」에서 확인해요.\n중복을 지우는 주석 아래에 `customers = customers.drop_duplicates(subset='customer_id')`를 넣고 다시 실행해요. 두 행 수를 비교해요.",
+      "language": "python",
+      "entry_file": "main.py",
+      "starter_code": "import pandas as pd\n\n# 주문 표와 고객 표를 읽어요.\norders = pd.read_csv('data/orders.csv')\ncustomers = pd.read_json('data/customers.json')\n# 이 아래에서 같은 customer_id의 중복을 지워요.\n# 주문은 모두 남기고 고객 정보를 붙여요.\nmerged = pd.merge(orders, customers, on='customer_id', how='left')\n# 합치기 전과 뒤의 행 수예요. 같아야 해요.\nprint(len(orders), len(merged))\n# 합친 표를 확인해요.\nprint(merged)\n",
+      "solution": "import pandas as pd\n\n# 주문 표와 고객 표를 읽어요.\norders = pd.read_csv('data/orders.csv')\ncustomers = pd.read_json('data/customers.json')\n# 이 아래에서 같은 customer_id의 중복을 지워요.\ncustomers = customers.drop_duplicates(subset='customer_id')\n# 주문은 모두 남기고 고객 정보를 붙여요.\nmerged = pd.merge(orders, customers, on='customer_id', how='left')\n# 합치기 전과 뒤의 행 수예요. 같아야 해요.\nprint(len(orders), len(merged))\n# 합친 표를 확인해요.\nprint(merged)\n",
+      "files": {
+        "data/orders.csv": "order_id,customer_id,amount\nA101,C01,12000\nA102,C01,5000\nA103,C03,8000\nA104,C04,15000\nA105,C02,9000\nA106,C06,7000\n",
+        "data/customers.json": "[\n  {\"customer_id\": \"C01\", \"region\": \"서울\", \"grade\": \"gold\"},\n  {\"customer_id\": \"C02\", \"region\": \"부산\", \"grade\": \"silver\"},\n  {\"customer_id\": \"C03\", \"region\": \"서울\", \"grade\": \"silver\"},\n  {\"customer_id\": \"C02\", \"region\": \"부산\", \"grade\": \"silver\"}\n]\n"
+      },
+      "tests": [
+        {
+          "input": "",
+          "expected": "6 6\n  order_id customer_id  amount region   grade\n0     A101         C01   12000     서울    gold\n1     A102         C01    5000     서울    gold\n2     A103         C03    8000     서울  silver\n3     A104         C04   15000    NaN     NaN\n4     A105         C02    9000     부산  silver\n5     A106         C06    7000    NaN     NaN"
+        }
+      ],
+      "web_checks": [],
+      "git_checks": null,
+      "required": true,
+      "hints": [
+        "주석 아래에 `customers = customers.drop_duplicates(subset='customer_id')`를 넣어요."
+      ],
+      "narration": [
+        {
+          "action": "set_code",
+          "code": "import pandas as pd\n\n# 주문 표와 고객 표를 읽어요.\norders = pd.read_csv('data/orders.csv')\ncustomers = pd.read_json('data/customers.json')\n# 이 아래에서 같은 customer_id의 중복을 지워요.\n# 주문은 모두 남기고 고객 정보를 붙여요.\nmerged = pd.merge(orders, customers, on='customer_id', how='left')\n# 합치기 전과 뒤의 행 수예요. 같아야 해요.\nprint(len(orders), len(merged))\n# 합친 표를 확인해요.\nprint(merged)\n",
+          "say": "준비 코드를 먼저 실행해 볼게요."
+        },
+        {
+          "action": "run",
+          "expected_failure": false
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "실행 결과를 비교해요.       C06    7000    NaN     NaN"
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "text": "조심하세요. subset 없이 지우면 등급만 다른 중복 행은 남아요."
+        },
+        {
+          "action": "patch_code",
+          "before": "# 이 아래에서 같은 customer_id의 중복을 지워요.",
+          "after": "# 이 아래에서 같은 customer_id의 중복을 지워요.\ncustomers = customers.drop_duplicates(subset='customer_id')",
+          "say": "작은 부분을 바꿔 원리를 확인해요."
+        },
+        {
+          "action": "run"
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "실행 결과를 비교해요.       C06    7000    NaN     NaN"
+        },
+        {
+          "action": "submit"
+        }
+      ],
+      "checker": "import ast\nimport builtins\nimport contextlib\nimport io\nimport math\nimport os\nfrom pathlib import Path\nimport shutil\nimport sys\nimport tempfile\nimport traceback\nimport warnings\n\nos.environ['MPLBACKEND'] = 'Agg'\n# Grading output is for the verdict only; font and library warnings would bury the reason.\nwarnings.filterwarnings('ignore')\nbuiltins.display = lambda *args, **kwargs: None\nreference = \"import pandas as pd\\n\\n# 주문 표와 고객 표를 읽어요.\\norders = pd.read_csv('data/orders.csv')\\ncustomers = pd.read_json('data/customers.json')\\n# 이 아래에서 같은 customer_id의 중복을 지워요.\\ncustomers = customers.drop_duplicates(subset='customer_id')\\n# 주문은 모두 남기고 고객 정보를 붙여요.\\nmerged = pd.merge(orders, customers, on='customer_id', how='left')\\n# 합치기 전과 뒤의 행 수예요. 같아야 해요.\\nprint(len(orders), len(merged))\\n# 합친 표를 확인해요.\\nprint(merged)\\n\"\ncases = [{}, {'files': {'data/orders.csv': 'order_id,customer_id,amount\\nB201,C04,3000\\nB202,C02,11000\\nB203,C07,6500\\nB204,C07,4000\\nB205,C06,2000\\n', 'data/customers.json': '[\\n  {\"customer_id\": \"C02\", \"region\": \"대전\", \"grade\": \"gold\"},\\n  {\"customer_id\": \"C04\", \"region\": \"서울\", \"grade\": \"bronze\"},\\n  {\"customer_id\": \"C04\", \"region\": \"서울\", \"grade\": \"bronze\"},\\n  {\"customer_id\": \"C06\", \"region\": \"광주\", \"grade\": \"silver\"},\\n  {\"customer_id\": \"C06\", \"region\": \"광주\", \"grade\": \"silver\"}\\n]\\n'}}, {'files': {'data/orders.csv': 'order_id,customer_id,amount\\nD301,C02,4500\\nD302,C03,13000\\nD303,C05,6000\\nD304,C05,8200\\nD305,C10,9900\\nD306,C08,3100\\nD307,C04,7600\\n', 'data/customers.json': '[\\n  {\"customer_id\": \"C01\", \"region\": \"인천\", \"grade\": \"silver\"},\\n  {\"customer_id\": \"C03\", \"region\": \"부산\", \"grade\": \"gold\"},\\n  {\"customer_id\": \"C05\", \"region\": \"서울\", \"grade\": \"bronze\"},\\n  {\"customer_id\": \"C05\", \"region\": \"서울\", \"grade\": \"gold\"},\\n  {\"customer_id\": \"C08\", \"region\": \"대구\", \"grade\": \"gold\"}\\n]\\n'}}]\nnames = ['merged']\nbase_files = {'data/orders.csv': 'order_id,customer_id,amount\\nA101,C01,12000\\nA102,C01,5000\\nA103,C03,8000\\nA104,C04,15000\\nA105,C02,9000\\nA106,C06,7000\\n', 'data/customers.json': '[\\n  {\"customer_id\": \"C01\", \"region\": \"서울\", \"grade\": \"gold\"},\\n  {\"customer_id\": \"C02\", \"region\": \"부산\", \"grade\": \"silver\"},\\n  {\"customer_id\": \"C03\", \"region\": \"서울\", \"grade\": \"silver\"},\\n  {\"customer_id\": \"C02\", \"region\": \"부산\", \"grade\": \"silver\"}\\n]\\n'}\nsource = open(sys.argv[1], encoding='utf8').read()\n\n\nclass Inputs(ast.NodeTransformer):\n    # Replace only the first prepared assignment to each changed name.\n    def __init__(self, values):\n        self.values = values\n        self.seen = set()\n\n    def visit_Assign(self, node):\n        if len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):\n            name = node.targets[0].id\n            if name in self.values and name not in self.seen:\n                self.seen.add(name)\n                node.value = ast.parse(repr(self.values[name]), mode='eval').body\n        return node\n\n\ndef execute(text, values):\n    tree = ast.fix_missing_locations(Inputs(values).visit(ast.parse(text)))\n    scope = {'__name__': '__main__'}\n    output = io.StringIO()\n    with contextlib.redirect_stdout(output):\n        exec(compile(tree, 'main.py', 'exec'), scope)\n    plt = sys.modules.get('matplotlib.pyplot')\n    if plt is not None:\n        plt.close('all')\n    return output.getvalue().rstrip('\\n'), scope\n\n\ndef same(actual, expected):\n    pd = sys.modules.get('pandas')\n    if pd is not None and isinstance(expected, (pd.DataFrame, pd.Series, pd.Index)):\n        if type(actual) is not type(expected):\n            return False\n        try:\n            if isinstance(expected, pd.DataFrame):\n                pd.testing.assert_frame_equal(actual, expected)\n            elif isinstance(expected, pd.Series):\n                pd.testing.assert_series_equal(actual, expected)\n            else:\n                pd.testing.assert_index_equal(actual, expected)\n            return True\n        except AssertionError:\n            return False\n    np = sys.modules.get('numpy')\n    if np is not None and isinstance(expected, np.ndarray):\n        # Model and scaler outputs: same shape, and values equal up to float rounding.\n        if not isinstance(actual, np.ndarray) or actual.shape != expected.shape:\n            return False\n        if expected.dtype.kind in 'fc':\n            return bool(np.allclose(actual, expected, rtol=1e-7, atol=1e-9, equal_nan=True))\n        return bool(np.array_equal(actual, expected))\n    if isinstance(expected, float) and isinstance(actual, (int, float)):\n        return math.isclose(actual, expected, rel_tol=1e-9, abs_tol=1e-12)\n    try:\n        return bool(actual == expected)\n    except Exception:\n        return False\n\n\ndef fail(message):\n    # The learner reads only this message, never the checker's own traceback.\n    print(message, file=sys.stderr)\n    sys.exit(1)\n\n\ndef snapshot(inputs):\n    # Files the run created or changed, such as a saved result CSV.\n    produced = {}\n    for path in Path('.').rglob('*'):\n        if path.is_file() and inputs.get(path.as_posix()) != path.read_bytes():\n            produced[path.as_posix()] = path.read_bytes()\n    return produced\n\n\ndef run_in_fresh_folder(files, text, values):\n    # Each run gets its own copy of the data, so files one run writes never help another.\n    home = os.getcwd()\n    folder = tempfile.mkdtemp(dir=home)\n    try:\n        os.chdir(folder)\n        inputs = {}\n        for path, content in files.items():\n            target = Path(path)\n            target.parent.mkdir(parents=True, exist_ok=True)\n            target.write_text(content, encoding='utf8')\n            inputs[target.as_posix()] = target.read_bytes()\n        output, scope = execute(text, values)\n        return output, scope, snapshot(inputs)\n    finally:\n        os.chdir(home)\n        shutil.rmtree(folder, ignore_errors=True)\n\n\ndef describe(case):\n    parts = [name + ' = ' + repr(value) for name, value in case.items() if name != 'files']\n    parts += [path + ' 내용' for path in case.get('files', {})]\n    return ', '.join(parts)\n\n\nMESSAGES = {'__figures__': '그래프의 종류·축 이름·값이 기준 그래프와 달라요. 바뀐 자료로도 같은 그래프를 그리세요.'}\nfor index, case in enumerate(cases):\n    values = {k: v for k, v in case.items() if k != 'files'}\n    files = {**base_files, **case.get('files', {})}\n    expected, wanted, made = run_in_fresh_folder(files, reference, values)\n    changed = '준비 값을 ' + describe(case) + '(으)로 바꾸면 '\n    try:\n        actual, scope, produced = run_in_fresh_folder(files, source, values)\n    except SystemExit:\n        fail('코드가 exit로 중간에 끝났어요. 끝까지 실행되게 하세요.')\n    except BaseException as error:\n        reason = ''.join(traceback.format_exception_only(type(error), error)).strip()\n        fail(('코드를 실행하면' if index == 0 else changed.rstrip()) + ' 오류가 나요.\\n' + reason)\n    if index == 0:\n        problem = '실행 결과가 기대와 달라요.'\n    else:\n        problem = changed + '결과가 달라요.\\n값이나 자료가 바뀌어도 맞는 방법인지 확인하세요.'\n    if actual != expected:\n        fail(problem + '\\n기대 출력:\\n' + expected[-600:] + '\\n실제 출력:\\n' + actual[-600:])\n    for name in names:\n        if name not in scope:\n            fail(name + '에 결과를 담아 주세요.')\n        if not same(scope[name], wanted[name]):\n            fail(problem + '\\n' + MESSAGES.get(name, name + '의 값이 기대와 달라요.'))\n    for path in sorted(made):\n        if path not in produced:\n            fail(problem + '\\n' + path + ' 파일을 저장하지 않았어요.')\n        if produced[path] != made[path]:\n            fail(problem + '\\n저장한 ' + path + ' 파일의 내용이 기대와 달라요.')\nprint('준비 값과 자료를 바꿔도 같은 원리로 계산했어요.')\n"
+    },
+    {
+      "id": "concat-months",
+      "title": "두 달 자료를 위아래로 이어요",
+      "goal": "`pd.concat([표1, 표2])`는 열 이름이 같은 표를 위아래로 이어요.\n원래 행 번호를 그대로 가져와서 번호가 겹쳐요. 그러면 번호 하나로 한 행을 고를 수 없어요.\n`ignore_index=True`를 넣으면 0부터 새로 번호를 매겨요.\n\n먼저 실행해서 세 행 수와 왼쪽의 행 번호를 보세요.\n번호가 0부터 다시 시작하는 곳이 있죠?\nconcat 괄호의 리스트 뒤에 `, ignore_index=True`를 넣으세요.\n다시 실행해서 행 번호를 비교해요.",
+      "language": "python",
+      "entry_file": "main.py",
+      "starter_code": "import pandas as pd\n\n# 9월과 10월 주문이에요. 열 이름과 순서가 같아요.\nmonth9 = pd.read_csv('data/orders_09.csv')\nmonth10 = pd.read_csv('data/orders_10.csv')\n# 두 표를 리스트에 담아 위아래로 이어요.\nboth = pd.concat([month9, month10])\n# 두 달의 행 수와 이은 표의 행 수예요.\nprint(len(month9), len(month10), len(both))\n# 표 왼쪽의 행 번호를 보세요.\nprint(both)\n",
+      "solution": "import pandas as pd\n\n# 9월과 10월 주문이에요. 열 이름과 순서가 같아요.\nmonth9 = pd.read_csv('data/orders_09.csv')\nmonth10 = pd.read_csv('data/orders_10.csv')\n# 두 표를 리스트에 담아 위아래로 이어요.\nboth = pd.concat([month9, month10], ignore_index=True)\n# 두 달의 행 수와 이은 표의 행 수예요.\nprint(len(month9), len(month10), len(both))\n# 표 왼쪽의 행 번호를 보세요.\nprint(both)\n",
+      "files": {
+        "data/orders_09.csv": "order_id,customer_id,amount\nA101,C01,12000\nA102,C01,5000\nA103,C03,8000\n",
+        "data/orders_10.csv": "order_id,customer_id,amount\nA104,C04,15000\nA105,C02,9000\nA106,C06,7000\nA107,C03,4000\n"
+      },
+      "tests": [
+        {
+          "input": "",
+          "expected": "3 4 7\n  order_id customer_id  amount\n0     A101         C01   12000\n1     A102         C01    5000\n2     A103         C03    8000\n3     A104         C04   15000\n4     A105         C02    9000\n5     A106         C06    7000\n6     A107         C03    4000"
+        }
+      ],
+      "web_checks": [],
+      "git_checks": null,
+      "required": true,
+      "hints": [
+        "`pd.concat([month9, month10], ignore_index=True)`로 바꿔요."
+      ],
+      "narration": [
+        {
+          "action": "set_code",
+          "code": "import pandas as pd\n\n# 9월과 10월 주문이에요. 열 이름과 순서가 같아요.\nmonth9 = pd.read_csv('data/orders_09.csv')\nmonth10 = pd.read_csv('data/orders_10.csv')\n# 두 표를 리스트에 담아 위아래로 이어요.\nboth = pd.concat([month9, month10])\n# 두 달의 행 수와 이은 표의 행 수예요.\nprint(len(month9), len(month10), len(both))\n# 표 왼쪽의 행 번호를 보세요.\nprint(both)\n",
+          "say": "준비 코드를 먼저 실행해 볼게요."
+        },
+        {
+          "action": "run",
+          "expected_failure": false
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "실행 결과를 비교해요. / 3     A107         C03    4000"
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "text": "조심하세요. `axis=1`을 넣으면 위아래가 아니라 옆으로 붙어요."
+        },
+        {
+          "action": "patch_code",
+          "before": "pd.concat([month9, month10])",
+          "after": "pd.concat([month9, month10], ignore_index=True)",
+          "say": "작은 부분을 바꿔 원리를 확인해요."
+        },
+        {
+          "action": "run"
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "실행 결과를 비교해요. / 6     A107         C03    4000"
+        },
+        {
+          "action": "submit"
+        }
+      ],
+      "checker": "import ast\nimport builtins\nimport contextlib\nimport io\nimport math\nimport os\nfrom pathlib import Path\nimport shutil\nimport sys\nimport tempfile\nimport traceback\nimport warnings\n\nos.environ['MPLBACKEND'] = 'Agg'\n# Grading output is for the verdict only; font and library warnings would bury the reason.\nwarnings.filterwarnings('ignore')\nbuiltins.display = lambda *args, **kwargs: None\nreference = \"import pandas as pd\\n\\n# 9월과 10월 주문이에요. 열 이름과 순서가 같아요.\\nmonth9 = pd.read_csv('data/orders_09.csv')\\nmonth10 = pd.read_csv('data/orders_10.csv')\\n# 두 표를 리스트에 담아 위아래로 이어요.\\nboth = pd.concat([month9, month10], ignore_index=True)\\n# 두 달의 행 수와 이은 표의 행 수예요.\\nprint(len(month9), len(month10), len(both))\\n# 표 왼쪽의 행 번호를 보세요.\\nprint(both)\\n\"\ncases = [{}, {'files': {'data/orders_09.csv': 'order_id,customer_id,amount\\nB201,C04,3000\\nB202,C02,11000\\n', 'data/orders_10.csv': 'order_id,customer_id,amount\\nB203,C07,6500\\nB204,C06,2000\\nB205,C04,5200\\n'}}, {'files': {'data/orders_09.csv': 'order_id,customer_id,amount\\nD301,C02,4500\\nD302,C03,13000\\nD303,C05,6000\\nD304,C05,8200\\n', 'data/orders_10.csv': 'order_id,customer_id,amount\\nD305,C10,9900\\nD306,C08,3100\\n'}}]\nnames = ['both']\nbase_files = {'data/orders_09.csv': 'order_id,customer_id,amount\\nA101,C01,12000\\nA102,C01,5000\\nA103,C03,8000\\n', 'data/orders_10.csv': 'order_id,customer_id,amount\\nA104,C04,15000\\nA105,C02,9000\\nA106,C06,7000\\nA107,C03,4000\\n'}\nsource = open(sys.argv[1], encoding='utf8').read()\n\n\nclass Inputs(ast.NodeTransformer):\n    # Replace only the first prepared assignment to each changed name.\n    def __init__(self, values):\n        self.values = values\n        self.seen = set()\n\n    def visit_Assign(self, node):\n        if len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):\n            name = node.targets[0].id\n            if name in self.values and name not in self.seen:\n                self.seen.add(name)\n                node.value = ast.parse(repr(self.values[name]), mode='eval').body\n        return node\n\n\ndef execute(text, values):\n    tree = ast.fix_missing_locations(Inputs(values).visit(ast.parse(text)))\n    scope = {'__name__': '__main__'}\n    output = io.StringIO()\n    with contextlib.redirect_stdout(output):\n        exec(compile(tree, 'main.py', 'exec'), scope)\n    plt = sys.modules.get('matplotlib.pyplot')\n    if plt is not None:\n        plt.close('all')\n    return output.getvalue().rstrip('\\n'), scope\n\n\ndef same(actual, expected):\n    pd = sys.modules.get('pandas')\n    if pd is not None and isinstance(expected, (pd.DataFrame, pd.Series, pd.Index)):\n        if type(actual) is not type(expected):\n            return False\n        try:\n            if isinstance(expected, pd.DataFrame):\n                pd.testing.assert_frame_equal(actual, expected)\n            elif isinstance(expected, pd.Series):\n                pd.testing.assert_series_equal(actual, expected)\n            else:\n                pd.testing.assert_index_equal(actual, expected)\n            return True\n        except AssertionError:\n            return False\n    np = sys.modules.get('numpy')\n    if np is not None and isinstance(expected, np.ndarray):\n        # Model and scaler outputs: same shape, and values equal up to float rounding.\n        if not isinstance(actual, np.ndarray) or actual.shape != expected.shape:\n            return False\n        if expected.dtype.kind in 'fc':\n            return bool(np.allclose(actual, expected, rtol=1e-7, atol=1e-9, equal_nan=True))\n        return bool(np.array_equal(actual, expected))\n    if isinstance(expected, float) and isinstance(actual, (int, float)):\n        return math.isclose(actual, expected, rel_tol=1e-9, abs_tol=1e-12)\n    try:\n        return bool(actual == expected)\n    except Exception:\n        return False\n\n\ndef fail(message):\n    # The learner reads only this message, never the checker's own traceback.\n    print(message, file=sys.stderr)\n    sys.exit(1)\n\n\ndef snapshot(inputs):\n    # Files the run created or changed, such as a saved result CSV.\n    produced = {}\n    for path in Path('.').rglob('*'):\n        if path.is_file() and inputs.get(path.as_posix()) != path.read_bytes():\n            produced[path.as_posix()] = path.read_bytes()\n    return produced\n\n\ndef run_in_fresh_folder(files, text, values):\n    # Each run gets its own copy of the data, so files one run writes never help another.\n    home = os.getcwd()\n    folder = tempfile.mkdtemp(dir=home)\n    try:\n        os.chdir(folder)\n        inputs = {}\n        for path, content in files.items():\n            target = Path(path)\n            target.parent.mkdir(parents=True, exist_ok=True)\n            target.write_text(content, encoding='utf8')\n            inputs[target.as_posix()] = target.read_bytes()\n        output, scope = execute(text, values)\n        return output, scope, snapshot(inputs)\n    finally:\n        os.chdir(home)\n        shutil.rmtree(folder, ignore_errors=True)\n\n\ndef describe(case):\n    parts = [name + ' = ' + repr(value) for name, value in case.items() if name != 'files']\n    parts += [path + ' 내용' for path in case.get('files', {})]\n    return ', '.join(parts)\n\n\nMESSAGES = {'__figures__': '그래프의 종류·축 이름·값이 기준 그래프와 달라요. 바뀐 자료로도 같은 그래프를 그리세요.'}\nfor index, case in enumerate(cases):\n    values = {k: v for k, v in case.items() if k != 'files'}\n    files = {**base_files, **case.get('files', {})}\n    expected, wanted, made = run_in_fresh_folder(files, reference, values)\n    changed = '준비 값을 ' + describe(case) + '(으)로 바꾸면 '\n    try:\n        actual, scope, produced = run_in_fresh_folder(files, source, values)\n    except SystemExit:\n        fail('코드가 exit로 중간에 끝났어요. 끝까지 실행되게 하세요.')\n    except BaseException as error:\n        reason = ''.join(traceback.format_exception_only(type(error), error)).strip()\n        fail(('코드를 실행하면' if index == 0 else changed.rstrip()) + ' 오류가 나요.\\n' + reason)\n    if index == 0:\n        problem = '실행 결과가 기대와 달라요.'\n    else:\n        problem = changed + '결과가 달라요.\\n값이나 자료가 바뀌어도 맞는 방법인지 확인하세요.'\n    if actual != expected:\n        fail(problem + '\\n기대 출력:\\n' + expected[-600:] + '\\n실제 출력:\\n' + actual[-600:])\n    for name in names:\n        if name not in scope:\n            fail(name + '에 결과를 담아 주세요.')\n        if not same(scope[name], wanted[name]):\n            fail(problem + '\\n' + MESSAGES.get(name, name + '의 값이 기대와 달라요.'))\n    for path in sorted(made):\n        if path not in produced:\n            fail(problem + '\\n' + path + ' 파일을 저장하지 않았어요.')\n        if produced[path] != made[path]:\n            fail(problem + '\\n저장한 ' + path + ' 파일의 내용이 기대와 달라요.')\nprint('준비 값과 자료를 바꿔도 같은 원리로 계산했어요.')\n"
+    },
+    {
+      "id": "month-report",
+      "title": "도전 · 두 달 주문에 고객 정보 붙이기",
+      "goal": "이어 붙이기, how, 중복 키를 함께 써요.\n고객 정보를 붙인 뒤에도 행 수는 주문 수와 같아야 해요.\n\n준비 코드는 두 달 주문에 고객 정보를 붙여 report.csv로 저장해요.\n먼저 실행해서 두 행 수를 비교하세요.\n주문이 빠지거나 두 번 들어가지 않게 고치세요. 고객 정보가 없으면 빈칸으로 둬요. 고칠 곳은 직접 찾아보세요.\n고객 파일은 문제 아래 「함께 제공한 파일」에서 보세요. 출력도 채점하니 확인용 print는 제출 전에 지우세요.",
+      "language": "python",
+      "entry_file": "main.py",
+      "starter_code": "import pandas as pd\n\n# 두 달 주문을 읽어 위아래로 이어요.\nmonth9 = pd.read_csv('data/orders_09.csv')\nmonth10 = pd.read_csv('data/orders_10.csv')\norders = pd.concat([month9, month10], ignore_index=True)\n# 고객 표를 읽어요.\ncustomers = pd.read_json('data/customers.json')\n# 고객 정보를 붙여요.\nmerged = pd.merge(orders, customers, on='customer_id')\n# 붙이기 전과 뒤의 행 수예요. 같아야 해요.\nprint(len(orders), len(merged))\n# 등급이 빈칸인 주문 수예요.\nprint(merged['grade'].isna().sum())\n# 정해진 이름으로 행 번호 없이 저장해요.\nmerged.to_csv('report.csv', index=False)\n",
+      "solution": "import pandas as pd\n\n# 두 달 주문을 읽어 위아래로 이어요.\nmonth9 = pd.read_csv('data/orders_09.csv')\nmonth10 = pd.read_csv('data/orders_10.csv')\norders = pd.concat([month9, month10], ignore_index=True)\n# 고객 표를 읽어요.\ncustomers = pd.read_json('data/customers.json')\n# 같은 고객이 여러 번 있으면 맨 위 행만 남겨요.\ncustomers = customers.drop_duplicates(subset='customer_id')\n# 고객 정보를 붙여요.\nmerged = pd.merge(orders, customers, on='customer_id', how='left')\n# 붙이기 전과 뒤의 행 수예요. 같아야 해요.\nprint(len(orders), len(merged))\n# 등급이 빈칸인 주문 수예요.\nprint(merged['grade'].isna().sum())\n# 정해진 이름으로 행 번호 없이 저장해요.\nmerged.to_csv('report.csv', index=False)\n",
+      "files": {
+        "data/orders_09.csv": "order_id,customer_id,amount\nA101,C01,12000\nA102,C01,5000\nA103,C03,8000\n",
+        "data/orders_10.csv": "order_id,customer_id,amount\nA104,C04,15000\nA105,C02,9000\nA106,C06,7000\nA107,C03,4000\n",
+        "data/customers.json": "[\n  {\"customer_id\": \"C01\", \"region\": \"서울\", \"grade\": \"gold\"},\n  {\"customer_id\": \"C02\", \"region\": \"부산\", \"grade\": \"silver\"},\n  {\"customer_id\": \"C02\", \"region\": \"부산\", \"grade\": \"silver\"},\n  {\"customer_id\": \"C03\", \"region\": \"서울\", \"grade\": \"silver\"},\n  {\"customer_id\": \"C05\", \"region\": \"대구\", \"grade\": \"gold\"}\n]\n"
+      },
+      "tests": [
+        {
+          "input": "",
+          "expected": "7 7\n2"
+        }
+      ],
+      "web_checks": [],
+      "git_checks": null,
+      "required": false,
+      "hints": [
+        "주문이 빠지는 이유와 두 번 들어가는 이유가 따로 있어요. 지금 행 수에는 둘이 섞여 있어요. 「함께 제공한 파일」의 고객 파일도 살펴보세요.",
+        "merge 앞에서 고객 중복을 지우고, merge에 `how='left'`를 넣어요."
+      ],
+      "narration": [
+        {
+          "action": "set_code",
+          "code": "import pandas as pd\n\n# 두 달 주문을 읽어 위아래로 이어요.\nmonth9 = pd.read_csv('data/orders_09.csv')\nmonth10 = pd.read_csv('data/orders_10.csv')\norders = pd.concat([month9, month10], ignore_index=True)\n# 고객 표를 읽어요.\ncustomers = pd.read_json('data/customers.json')\n# 고객 정보를 붙여요.\nmerged = pd.merge(orders, customers, on='customer_id')\n# 붙이기 전과 뒤의 행 수예요. 같아야 해요.\nprint(len(orders), len(merged))\n# 등급이 빈칸인 주문 수예요.\nprint(merged['grade'].isna().sum())\n# 정해진 이름으로 행 번호 없이 저장해요.\nmerged.to_csv('report.csv', index=False)\n",
+          "say": "준비 코드를 먼저 실행해 볼게요."
+        },
+        {
+          "action": "run",
+          "expected_failure": false
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "실행 결과를 비교해요. 7 6 / 0"
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "text": "조심하세요. how만 고치면 중복 고객 때문에 행 수가 주문 수보다 많아져요."
+        },
+        {
+          "action": "patch_code",
+          "before": "# 고객 정보를 붙여요.\nmerged = pd.merge(orders, customers, on='customer_id')",
+          "after": "# 같은 고객이 여러 번 있으면 맨 위 행만 남겨요.\ncustomers = customers.drop_duplicates(subset='customer_id')\n# 고객 정보를 붙여요.\nmerged = pd.merge(orders, customers, on='customer_id', how='left')",
+          "say": "작은 부분을 바꿔 원리를 확인해요."
+        },
+        {
+          "action": "run"
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "실행 결과를 비교해요. 7 7 / 2"
+        },
+        {
+          "action": "submit"
+        }
+      ],
+      "checker": "import ast\nimport builtins\nimport contextlib\nimport io\nimport math\nimport os\nfrom pathlib import Path\nimport shutil\nimport sys\nimport tempfile\nimport traceback\nimport warnings\n\nos.environ['MPLBACKEND'] = 'Agg'\n# Grading output is for the verdict only; font and library warnings would bury the reason.\nwarnings.filterwarnings('ignore')\nbuiltins.display = lambda *args, **kwargs: None\nreference = \"import pandas as pd\\n\\n# 두 달 주문을 읽어 위아래로 이어요.\\nmonth9 = pd.read_csv('data/orders_09.csv')\\nmonth10 = pd.read_csv('data/orders_10.csv')\\norders = pd.concat([month9, month10], ignore_index=True)\\n# 고객 표를 읽어요.\\ncustomers = pd.read_json('data/customers.json')\\n# 같은 고객이 여러 번 있으면 맨 위 행만 남겨요.\\ncustomers = customers.drop_duplicates(subset='customer_id')\\n# 고객 정보를 붙여요.\\nmerged = pd.merge(orders, customers, on='customer_id', how='left')\\n# 붙이기 전과 뒤의 행 수예요. 같아야 해요.\\nprint(len(orders), len(merged))\\n# 등급이 빈칸인 주문 수예요.\\nprint(merged['grade'].isna().sum())\\n# 정해진 이름으로 행 번호 없이 저장해요.\\nmerged.to_csv('report.csv', index=False)\\n\"\ncases = [{}, {'files': {'data/orders_09.csv': 'order_id,customer_id,amount\\nB201,C04,3000\\nB202,C02,11000\\n', 'data/orders_10.csv': 'order_id,customer_id,amount\\nB203,C07,6500\\nB204,C06,2000\\nB205,C04,5200\\n', 'data/customers.json': '[\\n  {\"customer_id\": \"C02\", \"region\": \"대전\", \"grade\": \"gold\"},\\n  {\"customer_id\": \"C04\", \"region\": \"서울\", \"grade\": \"bronze\"},\\n  {\"customer_id\": \"C04\", \"region\": \"서울\", \"grade\": \"bronze\"},\\n  {\"customer_id\": \"C06\", \"region\": \"광주\", \"grade\": \"silver\"},\\n  {\"customer_id\": \"C06\", \"region\": \"광주\", \"grade\": \"silver\"}\\n]\\n'}}, {'files': {'data/orders_09.csv': 'order_id,customer_id,amount\\nD301,C02,4500\\nD302,C03,13000\\nD303,C05,6000\\nD304,C05,8200\\n', 'data/orders_10.csv': 'order_id,customer_id,amount\\nD305,C10,9900\\nD306,C08,3100\\n', 'data/customers.json': '[\\n  {\"customer_id\": \"C01\", \"region\": \"인천\", \"grade\": \"silver\"},\\n  {\"customer_id\": \"C03\", \"region\": \"부산\", \"grade\": \"gold\"},\\n  {\"customer_id\": \"C05\", \"region\": \"서울\", \"grade\": \"bronze\"},\\n  {\"customer_id\": \"C05\", \"region\": \"서울\", \"grade\": \"gold\"},\\n  {\"customer_id\": \"C08\", \"region\": \"대구\", \"grade\": \"gold\"}\\n]\\n'}}]\nnames = []\nbase_files = {'data/orders_09.csv': 'order_id,customer_id,amount\\nA101,C01,12000\\nA102,C01,5000\\nA103,C03,8000\\n', 'data/orders_10.csv': 'order_id,customer_id,amount\\nA104,C04,15000\\nA105,C02,9000\\nA106,C06,7000\\nA107,C03,4000\\n', 'data/customers.json': '[\\n  {\"customer_id\": \"C01\", \"region\": \"서울\", \"grade\": \"gold\"},\\n  {\"customer_id\": \"C02\", \"region\": \"부산\", \"grade\": \"silver\"},\\n  {\"customer_id\": \"C02\", \"region\": \"부산\", \"grade\": \"silver\"},\\n  {\"customer_id\": \"C03\", \"region\": \"서울\", \"grade\": \"silver\"},\\n  {\"customer_id\": \"C05\", \"region\": \"대구\", \"grade\": \"gold\"}\\n]\\n'}\nsource = open(sys.argv[1], encoding='utf8').read()\n\n\nclass Inputs(ast.NodeTransformer):\n    # Replace only the first prepared assignment to each changed name.\n    def __init__(self, values):\n        self.values = values\n        self.seen = set()\n\n    def visit_Assign(self, node):\n        if len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):\n            name = node.targets[0].id\n            if name in self.values and name not in self.seen:\n                self.seen.add(name)\n                node.value = ast.parse(repr(self.values[name]), mode='eval').body\n        return node\n\n\ndef execute(text, values):\n    tree = ast.fix_missing_locations(Inputs(values).visit(ast.parse(text)))\n    scope = {'__name__': '__main__'}\n    output = io.StringIO()\n    with contextlib.redirect_stdout(output):\n        exec(compile(tree, 'main.py', 'exec'), scope)\n    plt = sys.modules.get('matplotlib.pyplot')\n    if plt is not None:\n        plt.close('all')\n    return output.getvalue().rstrip('\\n'), scope\n\n\ndef same(actual, expected):\n    pd = sys.modules.get('pandas')\n    if pd is not None and isinstance(expected, (pd.DataFrame, pd.Series, pd.Index)):\n        if type(actual) is not type(expected):\n            return False\n        try:\n            if isinstance(expected, pd.DataFrame):\n                pd.testing.assert_frame_equal(actual, expected)\n            elif isinstance(expected, pd.Series):\n                pd.testing.assert_series_equal(actual, expected)\n            else:\n                pd.testing.assert_index_equal(actual, expected)\n            return True\n        except AssertionError:\n            return False\n    np = sys.modules.get('numpy')\n    if np is not None and isinstance(expected, np.ndarray):\n        # Model and scaler outputs: same shape, and values equal up to float rounding.\n        if not isinstance(actual, np.ndarray) or actual.shape != expected.shape:\n            return False\n        if expected.dtype.kind in 'fc':\n            return bool(np.allclose(actual, expected, rtol=1e-7, atol=1e-9, equal_nan=True))\n        return bool(np.array_equal(actual, expected))\n    if isinstance(expected, float) and isinstance(actual, (int, float)):\n        return math.isclose(actual, expected, rel_tol=1e-9, abs_tol=1e-12)\n    try:\n        return bool(actual == expected)\n    except Exception:\n        return False\n\n\ndef fail(message):\n    # The learner reads only this message, never the checker's own traceback.\n    print(message, file=sys.stderr)\n    sys.exit(1)\n\n\ndef snapshot(inputs):\n    # Files the run created or changed, such as a saved result CSV.\n    produced = {}\n    for path in Path('.').rglob('*'):\n        if path.is_file() and inputs.get(path.as_posix()) != path.read_bytes():\n            produced[path.as_posix()] = path.read_bytes()\n    return produced\n\n\ndef run_in_fresh_folder(files, text, values):\n    # Each run gets its own copy of the data, so files one run writes never help another.\n    home = os.getcwd()\n    folder = tempfile.mkdtemp(dir=home)\n    try:\n        os.chdir(folder)\n        inputs = {}\n        for path, content in files.items():\n            target = Path(path)\n            target.parent.mkdir(parents=True, exist_ok=True)\n            target.write_text(content, encoding='utf8')\n            inputs[target.as_posix()] = target.read_bytes()\n        output, scope = execute(text, values)\n        return output, scope, snapshot(inputs)\n    finally:\n        os.chdir(home)\n        shutil.rmtree(folder, ignore_errors=True)\n\n\ndef describe(case):\n    parts = [name + ' = ' + repr(value) for name, value in case.items() if name != 'files']\n    parts += [path + ' 내용' for path in case.get('files', {})]\n    return ', '.join(parts)\n\n\nMESSAGES = {'__figures__': '그래프의 종류·축 이름·값이 기준 그래프와 달라요. 바뀐 자료로도 같은 그래프를 그리세요.'}\nfor index, case in enumerate(cases):\n    values = {k: v for k, v in case.items() if k != 'files'}\n    files = {**base_files, **case.get('files', {})}\n    expected, wanted, made = run_in_fresh_folder(files, reference, values)\n    changed = '준비 값을 ' + describe(case) + '(으)로 바꾸면 '\n    try:\n        actual, scope, produced = run_in_fresh_folder(files, source, values)\n    except SystemExit:\n        fail('코드가 exit로 중간에 끝났어요. 끝까지 실행되게 하세요.')\n    except BaseException as error:\n        reason = ''.join(traceback.format_exception_only(type(error), error)).strip()\n        fail(('코드를 실행하면' if index == 0 else changed.rstrip()) + ' 오류가 나요.\\n' + reason)\n    if index == 0:\n        problem = '실행 결과가 기대와 달라요.'\n    else:\n        problem = changed + '결과가 달라요.\\n값이나 자료가 바뀌어도 맞는 방법인지 확인하세요.'\n    if actual != expected:\n        fail(problem + '\\n기대 출력:\\n' + expected[-600:] + '\\n실제 출력:\\n' + actual[-600:])\n    for name in names:\n        if name not in scope:\n            fail(name + '에 결과를 담아 주세요.')\n        if not same(scope[name], wanted[name]):\n            fail(problem + '\\n' + MESSAGES.get(name, name + '의 값이 기대와 달라요.'))\n    for path in sorted(made):\n        if path not in produced:\n            fail(problem + '\\n' + path + ' 파일을 저장하지 않았어요.')\n        if produced[path] != made[path]:\n            fail(problem + '\\n저장한 ' + path + ' 파일의 내용이 기대와 달라요.')\nprint('준비 값과 자료를 바꿔도 같은 원리로 계산했어요.')\n"
+    },
+    {
+      "id": "member-types",
+      "title": "도전 · 이름도 자료형도 다른 키",
+      "goal": "left_on·right_on과 astype을 함께 써요.\n오류를 하나 고치면 다음 오류가 나올 수 있어요.\n\n매장 주문에 회원 정보를 붙여 member_orders.csv로 저장해요.\n주문은 모두 남기고, 회원 정보가 없으면 빈칸으로 두세요.\n오류가 나면 마지막 줄을 읽고 하나씩 고치세요. 자료형 오류면 두 키 열을 모두 살펴봐요.\n두 파일의 키 열은 문제 아래 「함께 제공한 파일」에서 확인해요. 출력도 채점하니 확인용 print는 제출 전에 지우세요.",
+      "language": "python",
+      "entry_file": "main.py",
+      "starter_code": "import pandas as pd\n\n# 매장 주문이에요. 회원이 아니면 비회원으로 적었어요.\norders = pd.read_csv('data/shop_orders.csv')\n# 회원 파일이에요. 회원 번호를 따옴표 없는 숫자로 적었어요.\nmembers = pd.read_json('data/shop_members.json')\n# 주문은 모두 남기고 회원 정보를 붙여요.\nmerged = pd.merge(orders, members, on='customer_id', how='left')\n# 붙이기 전과 뒤의 행 수예요.\nprint(len(orders), len(merged))\n# 등급이 빈칸인 주문 수예요.\nprint(merged['grade'].isna().sum())\n# 정해진 이름으로 행 번호 없이 저장해요.\nmerged.to_csv('member_orders.csv', index=False)\n",
+      "solution": "import pandas as pd\n\n# 매장 주문이에요. 회원이 아니면 비회원으로 적었어요.\norders = pd.read_csv('data/shop_orders.csv')\n# 회원 파일이에요. 회원 번호를 따옴표 없는 숫자로 적었어요.\nmembers = pd.read_json('data/shop_members.json')\n# 회원 번호를 글자로 바꿔 주문 키와 자료형을 맞춰요.\nmembers['member_no'] = members['member_no'].astype(str)\n# 주문은 모두 남기고 회원 정보를 붙여요.\nmerged = pd.merge(orders, members, left_on='customer_id', right_on='member_no', how='left')\n# 붙이기 전과 뒤의 행 수예요.\nprint(len(orders), len(merged))\n# 등급이 빈칸인 주문 수예요.\nprint(merged['grade'].isna().sum())\n# 정해진 이름으로 행 번호 없이 저장해요.\nmerged.to_csv('member_orders.csv', index=False)\n",
+      "files": {
+        "data/shop_orders.csv": "order_id,customer_id,amount\nS01,101,12000\nS02,비회원,5000\nS03,103,8000\nS04,104,15000\nS05,103,6000\n",
+        "data/shop_members.json": "[\n  {\"member_no\": 101, \"region\": \"서울\", \"grade\": \"gold\"},\n  {\"member_no\": 103, \"region\": \"부산\", \"grade\": \"silver\"},\n  {\"member_no\": 105, \"region\": \"대구\", \"grade\": \"gold\"}\n]\n"
+      },
+      "tests": [
+        {
+          "input": "",
+          "expected": "5 5\n2"
+        }
+      ],
+      "web_checks": [],
+      "git_checks": null,
+      "required": false,
+      "hints": [
+        "회원 파일의 키 열은 member_no예요. 오류에 customer_id가 나와도 정수로 읽힌 열은 member_no예요.",
+        "`members['member_no'] = members['member_no'].astype(str)`를 넣고 `left_on`, `right_on`을 써요."
+      ],
+      "narration": [
+        {
+          "action": "set_code",
+          "code": "import pandas as pd\n\n# 매장 주문이에요. 회원이 아니면 비회원으로 적었어요.\norders = pd.read_csv('data/shop_orders.csv')\n# 회원 파일이에요. 회원 번호를 따옴표 없는 숫자로 적었어요.\nmembers = pd.read_json('data/shop_members.json')\n# 주문은 모두 남기고 회원 정보를 붙여요.\nmerged = pd.merge(orders, members, on='customer_id', how='left')\n# 붙이기 전과 뒤의 행 수예요.\nprint(len(orders), len(merged))\n# 등급이 빈칸인 주문 수예요.\nprint(merged['grade'].isna().sum())\n# 정해진 이름으로 행 번호 없이 저장해요.\nmerged.to_csv('member_orders.csv', index=False)\n",
+          "say": "준비 코드를 먼저 실행해 볼게요."
+        },
+        {
+          "action": "run",
+          "expected_failure": true
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "지금 코드는 검사를 통과하지 못해요."
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "text": "조심하세요. 키 이름만 고치면 자료형이 달라 ValueError가 나요."
+        },
+        {
+          "action": "patch_code",
+          "before": "# 주문은 모두 남기고 회원 정보를 붙여요.\nmerged = pd.merge(orders, members, on='customer_id', how='left')",
+          "after": "# 회원 번호를 글자로 바꿔 주문 키와 자료형을 맞춰요.\nmembers['member_no'] = members['member_no'].astype(str)\n# 주문은 모두 남기고 회원 정보를 붙여요.\nmerged = pd.merge(orders, members, left_on='customer_id', right_on='member_no', how='left')",
+          "say": "작은 부분을 바꿔 원리를 확인해요."
+        },
+        {
+          "action": "run"
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "실행 결과를 비교해요. 5 5 / 2"
+        },
+        {
+          "action": "submit"
+        }
+      ],
+      "checker": "import ast\nimport builtins\nimport contextlib\nimport io\nimport math\nimport os\nfrom pathlib import Path\nimport shutil\nimport sys\nimport tempfile\nimport traceback\nimport warnings\n\nos.environ['MPLBACKEND'] = 'Agg'\n# Grading output is for the verdict only; font and library warnings would bury the reason.\nwarnings.filterwarnings('ignore')\nbuiltins.display = lambda *args, **kwargs: None\nreference = \"import pandas as pd\\n\\n# 매장 주문이에요. 회원이 아니면 비회원으로 적었어요.\\norders = pd.read_csv('data/shop_orders.csv')\\n# 회원 파일이에요. 회원 번호를 따옴표 없는 숫자로 적었어요.\\nmembers = pd.read_json('data/shop_members.json')\\n# 회원 번호를 글자로 바꿔 주문 키와 자료형을 맞춰요.\\nmembers['member_no'] = members['member_no'].astype(str)\\n# 주문은 모두 남기고 회원 정보를 붙여요.\\nmerged = pd.merge(orders, members, left_on='customer_id', right_on='member_no', how='left')\\n# 붙이기 전과 뒤의 행 수예요.\\nprint(len(orders), len(merged))\\n# 등급이 빈칸인 주문 수예요.\\nprint(merged['grade'].isna().sum())\\n# 정해진 이름으로 행 번호 없이 저장해요.\\nmerged.to_csv('member_orders.csv', index=False)\\n\"\ncases = [{}, {'files': {'data/shop_orders.csv': 'order_id,customer_id,amount\\nS11,비회원,7000\\nS12,102,3000\\nS13,107,9500\\nS14,비회원,4000\\n', 'data/shop_members.json': '[\\n  {\"member_no\": 102, \"region\": \"광주\", \"grade\": \"silver\"},\\n  {\"member_no\": 107, \"region\": \"서울\", \"grade\": \"bronze\"},\\n  {\"member_no\": 108, \"region\": \"대전\", \"grade\": \"gold\"}\\n]\\n'}}, {'files': {'data/shop_orders.csv': 'order_id,customer_id,amount\\nS21,110,5500\\nS22,111,8800\\nS23,비회원,2500\\nS24,112,13000\\nS25,110,4100\\nS26,113,6600\\n', 'data/shop_members.json': '[\\n  {\"member_no\": 110, \"region\": \"부산\", \"grade\": \"gold\"},\\n  {\"member_no\": 112, \"region\": \"인천\", \"grade\": \"silver\"},\\n  {\"member_no\": 113, \"region\": \"서울\", \"grade\": \"silver\"},\\n  {\"member_no\": 114, \"region\": \"대구\", \"grade\": \"bronze\"}\\n]\\n'}}]\nnames = ['merged']\nbase_files = {'data/shop_orders.csv': 'order_id,customer_id,amount\\nS01,101,12000\\nS02,비회원,5000\\nS03,103,8000\\nS04,104,15000\\nS05,103,6000\\n', 'data/shop_members.json': '[\\n  {\"member_no\": 101, \"region\": \"서울\", \"grade\": \"gold\"},\\n  {\"member_no\": 103, \"region\": \"부산\", \"grade\": \"silver\"},\\n  {\"member_no\": 105, \"region\": \"대구\", \"grade\": \"gold\"}\\n]\\n'}\nsource = open(sys.argv[1], encoding='utf8').read()\n\n\nclass Inputs(ast.NodeTransformer):\n    # Replace only the first prepared assignment to each changed name.\n    def __init__(self, values):\n        self.values = values\n        self.seen = set()\n\n    def visit_Assign(self, node):\n        if len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):\n            name = node.targets[0].id\n            if name in self.values and name not in self.seen:\n                self.seen.add(name)\n                node.value = ast.parse(repr(self.values[name]), mode='eval').body\n        return node\n\n\ndef execute(text, values):\n    tree = ast.fix_missing_locations(Inputs(values).visit(ast.parse(text)))\n    scope = {'__name__': '__main__'}\n    output = io.StringIO()\n    with contextlib.redirect_stdout(output):\n        exec(compile(tree, 'main.py', 'exec'), scope)\n    plt = sys.modules.get('matplotlib.pyplot')\n    if plt is not None:\n        plt.close('all')\n    return output.getvalue().rstrip('\\n'), scope\n\n\ndef same(actual, expected):\n    pd = sys.modules.get('pandas')\n    if pd is not None and isinstance(expected, (pd.DataFrame, pd.Series, pd.Index)):\n        if type(actual) is not type(expected):\n            return False\n        try:\n            if isinstance(expected, pd.DataFrame):\n                pd.testing.assert_frame_equal(actual, expected)\n            elif isinstance(expected, pd.Series):\n                pd.testing.assert_series_equal(actual, expected)\n            else:\n                pd.testing.assert_index_equal(actual, expected)\n            return True\n        except AssertionError:\n            return False\n    np = sys.modules.get('numpy')\n    if np is not None and isinstance(expected, np.ndarray):\n        # Model and scaler outputs: same shape, and values equal up to float rounding.\n        if not isinstance(actual, np.ndarray) or actual.shape != expected.shape:\n            return False\n        if expected.dtype.kind in 'fc':\n            return bool(np.allclose(actual, expected, rtol=1e-7, atol=1e-9, equal_nan=True))\n        return bool(np.array_equal(actual, expected))\n    if isinstance(expected, float) and isinstance(actual, (int, float)):\n        return math.isclose(actual, expected, rel_tol=1e-9, abs_tol=1e-12)\n    try:\n        return bool(actual == expected)\n    except Exception:\n        return False\n\n\ndef fail(message):\n    # The learner reads only this message, never the checker's own traceback.\n    print(message, file=sys.stderr)\n    sys.exit(1)\n\n\ndef snapshot(inputs):\n    # Files the run created or changed, such as a saved result CSV.\n    produced = {}\n    for path in Path('.').rglob('*'):\n        if path.is_file() and inputs.get(path.as_posix()) != path.read_bytes():\n            produced[path.as_posix()] = path.read_bytes()\n    return produced\n\n\ndef run_in_fresh_folder(files, text, values):\n    # Each run gets its own copy of the data, so files one run writes never help another.\n    home = os.getcwd()\n    folder = tempfile.mkdtemp(dir=home)\n    try:\n        os.chdir(folder)\n        inputs = {}\n        for path, content in files.items():\n            target = Path(path)\n            target.parent.mkdir(parents=True, exist_ok=True)\n            target.write_text(content, encoding='utf8')\n            inputs[target.as_posix()] = target.read_bytes()\n        output, scope = execute(text, values)\n        return output, scope, snapshot(inputs)\n    finally:\n        os.chdir(home)\n        shutil.rmtree(folder, ignore_errors=True)\n\n\ndef describe(case):\n    parts = [name + ' = ' + repr(value) for name, value in case.items() if name != 'files']\n    parts += [path + ' 내용' for path in case.get('files', {})]\n    return ', '.join(parts)\n\n\nMESSAGES = {'__figures__': '그래프의 종류·축 이름·값이 기준 그래프와 달라요. 바뀐 자료로도 같은 그래프를 그리세요.'}\nfor index, case in enumerate(cases):\n    values = {k: v for k, v in case.items() if k != 'files'}\n    files = {**base_files, **case.get('files', {})}\n    expected, wanted, made = run_in_fresh_folder(files, reference, values)\n    changed = '준비 값을 ' + describe(case) + '(으)로 바꾸면 '\n    try:\n        actual, scope, produced = run_in_fresh_folder(files, source, values)\n    except SystemExit:\n        fail('코드가 exit로 중간에 끝났어요. 끝까지 실행되게 하세요.')\n    except BaseException as error:\n        reason = ''.join(traceback.format_exception_only(type(error), error)).strip()\n        fail(('코드를 실행하면' if index == 0 else changed.rstrip()) + ' 오류가 나요.\\n' + reason)\n    if index == 0:\n        problem = '실행 결과가 기대와 달라요.'\n    else:\n        problem = changed + '결과가 달라요.\\n값이나 자료가 바뀌어도 맞는 방법인지 확인하세요.'\n    if actual != expected:\n        fail(problem + '\\n기대 출력:\\n' + expected[-600:] + '\\n실제 출력:\\n' + actual[-600:])\n    for name in names:\n        if name not in scope:\n            fail(name + '에 결과를 담아 주세요.')\n        if not same(scope[name], wanted[name]):\n            fail(problem + '\\n' + MESSAGES.get(name, name + '의 값이 기대와 달라요.'))\n    for path in sorted(made):\n        if path not in produced:\n            fail(problem + '\\n' + path + ' 파일을 저장하지 않았어요.')\n        if produced[path] != made[path]:\n            fail(problem + '\\n저장한 ' + path + ' 파일의 내용이 기대와 달라요.')\nprint('준비 값과 자료를 바꿔도 같은 원리로 계산했어요.')\n"
+    }
+  ]
+}
